@@ -32,7 +32,7 @@ export class StaticRayIndex {
 /** Coalesce events into one frame; continue only while the caller has visible work. */
 export class FramePump {
   private pending=false;
-  constructor(private render:(time:number)=>boolean,private schedule:(callback:FrameRequestCallback)=>number=requestAnimationFrame){}
+  constructor(private render:(time:number)=>boolean,private schedule:(callback:FrameRequestCallback)=>number=callback=>window.requestAnimationFrame(callback)){}
   request():void{
     if(this.pending)return;
     this.pending=true;

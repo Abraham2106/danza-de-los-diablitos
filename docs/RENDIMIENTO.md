@@ -22,12 +22,14 @@ La última fila mide el tiempo de los manejadores de eventos: la nueva versión 
 
 ## Comprobaciones
 
-- 34 pruebas pasan: navegación, datos, cámara, reflejos, selección acelerada, agrupación de eventos y regresión del sesgo de profundidad.
+- 35 pruebas pasan: navegación, datos, cámara, reflejos, selección acelerada, agrupación de eventos, receptor Window del planificador y regresión del sesgo de profundidad.
 - TypeScript y compilación de producción correctos.
 - Las 12 fotografías cargan y tienen vista de enfoque despejada, sin recurrir a la ficha alternativa. Se verificaron arrastre, giro, redimensionamiento durante el enfoque y las seis vistas.
 - Antes de la corrección de esquinas, la comparación de la región central de la vista inicial entre ambas versiones tuvo diferencia máxima y media de 0. El regreso tras enfocar y cerrar una fotografía también tuvo diferencia de 0. La corrección posterior cambia deliberadamente los bordes defectuosos.
 - Reproducción de la esquina de la sala B desde `(12, 1,65, −2)`, orientación 1,95 radianes, y 40 posiciones/orientaciones sucesivas. Las capturas antes/después documentan la eliminación de las franjas gruesas en pared y piso. Las muestras de vecindades de 5 × 5 píxeles alrededor de cuatro esquinas acumularon 263 píxeles oscuros antes y 20 después; este muestreo incluye también elementos cercanos y no pretende certificar todo el recorrido.
 - Las fotografías, el GLB y el Blender editable no se modificaron ni recomprimieron.
+
+Corrección posterior de carga: el planificador ahora llama a `window.requestAnimationFrame(callback)` y conserva el receptor requerido por la API nativa. Guardar la función como método del planificador producía una excepción de Window en navegadores sin instrumentación. La instrumentación de las mediciones anteriores sustituía temporalmente esa función y ocultó el fallo. Se añadió una regresión del receptor y se comprobó la compilación de producción en una pestaña nueva, con `requestAnimationFrame` nativo, sin errores de página: carga, entrada, giro, enfoque y regreso al recorrido.
 
 Antes:
 

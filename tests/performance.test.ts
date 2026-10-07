@@ -31,6 +31,19 @@ describe('Selección acelerada sin cambiar los impactos',()=>{
 });
 
 describe('Renderizado a demanda',()=>{
+  it('llama al planificador nativo con Window como receptor',()=>{
+    const callbacks:FrameRequestCallback[]=[];
+    const windowLike={requestAnimationFrame:function(this:unknown,callback:FrameRequestCallback){
+      if(this!==windowLike)throw new TypeError('requestAnimationFrame requires Window');
+      return callbacks.push(callback);
+    }};
+    vi.stubGlobal('window',windowLike);vi.stubGlobal('requestAnimationFrame',windowLike.requestAnimationFrame);
+    try{
+      const render=vi.fn(()=>false);const pump=new FramePump(render);
+      expect(()=>pump.request()).not.toThrow();expect(callbacks).toHaveLength(1);
+      callbacks[0](16);expect(render).toHaveBeenCalledWith(16);
+    }finally{vi.unstubAllGlobals();}
+  });
   it('agrupa eventos, continúa durante movimiento y vuelve a dormir',()=>{
     const callbacks:FrameRequestCallback[]=[];let moving=false;const render=vi.fn(()=>moving);
     const pump=new FramePump(render,callback=>callbacks.push(callback));

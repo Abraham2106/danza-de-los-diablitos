@@ -1,0 +1,16 @@
+{
+  "triangles": 43076,
+  "vertices": 21536,
+  "nonManifoldEdges": 0,
+  "glbBytes": 1548908,
+  "frontTexture": "unchanged user photograph, 413 x 542",
+  "imageWidth": 413,
+  "imageHeight": 542,
+  "dimensionsMetres": [
+    0.6678313612937927,
+    0.21852539479732513,
+    1.0724858045578003
+  ],
+  "sourceReference": "owl-mask-reference.png",
+  "standIncluded": true
+}

@@ -41,6 +41,8 @@ La visita utiliza calidad alta por defecto y renderizado a demanda para evitar t
 
 Las cartelas físicas tienen texto más grande, crédito completo y selección directa. La [actualización de cartelas y entradas](docs/CARTELAS-Y-UNIONES.md) muestra las capturas y explica cómo se elimina la superposición del muro del pasillo.
 
+Los pedestales exponen una [máscara de búho en relieve](docs/MASCARA-BUHO.md), creada en Blender a partir de la referencia elegida por el usuario. El asset GLB incluye textura y soporte, y la fuente editable está incluida en el repositorio.
+
 - `src/`: aplicación y navegación.
 - `public/models/`: geometría exportada de Blender y materiales.
 - `public/data/exhibition.json`: títulos, descripciones, créditos y posiciones de enfoque.

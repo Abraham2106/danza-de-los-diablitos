@@ -28,3 +28,7 @@ La arquitectura parte de la referencia HTML facilitada anteriormente. El modelo 
 Modelos y texturas de árboles: [Quaternius — Ultimate Stylized Nature Pack](https://quaternius.com/packs/ultimatestylizednature.html), licencia CC0 1.0. Fuentes y verificación en `assets/trees/provenance.json`.
 
 Instrument Serif y DM Sans se sirven localmente y conservan sus licencias OFL. El código web usa Three.js, Vite, TypeScript y Vitest, con versiones fijadas y licencias de sus dependencias.
+
+## Máscara de exposición
+
+La referencia de la máscara de búho fue aportada por el usuario. El modelo en relieve utiliza esa fotografía como textura frontal. La procedencia y la autoría de la pieza tallada no se infieren ni se sustituyen por créditos inventados. La referencia permanece en `gallery-source/blender/owl-mask-reference.png` y el modelado reproducible en `gallery-source/blender/scripts/build_owl_mask.py`.

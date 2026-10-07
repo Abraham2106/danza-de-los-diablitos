@@ -11,6 +11,7 @@ import {FocusSession,framingDistance,focusViewOffset,selectArtworkView,hasArtwor
 import {FramePump,StaticRayIndex} from './performance';
 import {joinDoorwayWalls} from './architecture';
 import {addArtworkLabels} from './labels';
+import {replaceFurnishings} from './furnishings';
 
 const icons = {
   arrow:'<path d="M4 9h10M10 5l4 4-4 4"/>', close:'<path d="m5 5 8 8M13 5l-8 8"/>',
@@ -241,7 +242,10 @@ async function initialize(): Promise<void> {
     if(!canStand(point,exhibition.navigation))throw new Error('El punto de entrada de la galería está ocupado.');
     setCamera();setLoad('Cargando las salas y las obras…',8);
     const loader=new GLTFLoader();
-    const gltf=await loader.loadAsync(assetUrl(exhibition.model),event=>{if(event.total>0)setLoad(`Cargando la galería · ${Math.round(event.loaded/event.total*100)} %`,8+event.loaded/event.total*87);});
+    const [gltf,mask]=await Promise.all([
+      loader.loadAsync(assetUrl(exhibition.model),event=>{if(event.total>0)setLoad(`Cargando la galería · ${Math.round(event.loaded/event.total*100)} %`,8+event.loaded/event.total*87);}),
+      loader.loadAsync(assetUrl('models/boruca-owl-mask.glb')),
+    ]);
     model=gltf.scene;scene.add(model);model.updateMatrixWorld(true);
     model.traverse(object=>{
       if(object instanceof THREE.Mesh){modelHits.push(object);object.frustumCulled=true;
@@ -249,6 +253,7 @@ async function initialize(): Promise<void> {
         for(const material of materials)if(material instanceof THREE.MeshStandardMaterial)material.envMapIntensity=.55;
       }
     });
+    replaceFurnishings(model,mask.scene,exhibition.navigation);
     joinDoorwayWalls(model,exhibition.navigation);
     await addArtworkLabels(model,exhibition.artworks,Math.min(8,renderer!.capabilities.getMaxAnisotropy()));
     modelHits=[];model.traverse(object=>{if(object instanceof THREE.Mesh&&object.visible)modelHits.push(object);});

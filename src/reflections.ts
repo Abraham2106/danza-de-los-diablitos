@@ -69,7 +69,7 @@ export function addPlanarReflections(model:THREE.Group,scene:THREE.Scene,nav:Nav
     }
   });
   const mirrors:Reflector[]=[];const resetCaptures:(()=>void)[]=[];let reduced=false;
-  function mirror(geometry:THREE.BufferGeometry,name:string,floor:boolean):Reflector{
+  function mirror(geometry:THREE.BufferGeometry,name:string,floor:boolean,bounds:THREE.Box3[]):Reflector{
     const width=floor?1024:768,height=Math.round(width*innerHeight/innerWidth);
     const reflector=new Reflector(geometry,{textureWidth:width,textureHeight:height,clipBias:.002,multisample:0,shader:{
       name:'SoftPlanarReflection',vertexShader,fragmentShader,uniforms:{
@@ -84,25 +84,36 @@ export function addPlanarReflections(model:THREE.Group,scene:THREE.Scene,nav:Nav
     reflectionTexture.generateMipmaps=true;reflectionTexture.minFilter=THREE.LinearMipmapLinearFilter;
     const surface=reflector.material as THREE.ShaderMaterial;surface.transparent=true;surface.depthWrite=false;
     reflector.renderOrder=floor?1:2;
-    const capture=reflector.onBeforeRender;let previous='',lastTime=-Infinity;
-    resetCaptures.push(()=>{previous='';lastTime=-Infinity;});
+    const capture=reflector.onBeforeRender;let captured=false,lastTime=-Infinity;
+    const previousWorld=new THREE.Matrix4(),previousProjection=new THREE.Matrix4();
+    const clipMatrix=new THREE.Matrix4(),frustum=new THREE.Frustum();
+    // Allocate once. The array contains all three planes by the time rendering starts.
+    let hidden:THREE.Object3D[]|undefined;const visibility:boolean[]=[];
+    resetCaptures.push(()=>{captured=false;lastTime=-Infinity;});
     reflector.onBeforeRender=(renderer,currentScene,camera,geometry,material,group)=>{
-      const key=camera.matrixWorld.elements.join(',')+camera.projectionMatrix.elements.join(',');
-      const now=performance.now();if(key===previous||now-lastTime<(reduced?66:30))return;
-      const hidden:THREE.Object3D[]=[...mirrors,...glass,...(floor?floors:[])];
-      const visibility=hidden.map(o=>o.visible);hidden.forEach(o=>o.visible=false);
-      try{capture.call(reflector,renderer,currentScene,camera,geometry,material,group);previous=key;lastTime=now;}
+      const now=performance.now();
+      if((captured&&previousWorld.equals(camera.matrixWorld)&&previousProjection.equals(camera.projectionMatrix))||now-lastTime<(reduced?66:30))return;
+      // A shared plane's bounding sphere can span rooms and the gap between them.
+      // Only skip its capture when every actual surface is outside the frustum.
+      frustum.setFromProjectionMatrix(clipMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+      if(!bounds.some(box=>frustum.intersectsBox(box)))return;
+      hidden??=[...mirrors,...glass,...(floor?floors:[])];
+      hidden.forEach((o,i)=>{visibility[i]=o.visible;o.visible=false;});
+      try{capture.call(reflector,renderer,currentScene,camera,geometry,material,group);previousWorld.copy(camera.matrixWorld);previousProjection.copy(camera.projectionMatrix);captured=true;lastTime=now;}
       finally{hidden.forEach((o,i)=>o.visible=visibility[i]);}
     };
     mirrors.push(reflector);scene.add(reflector);return reflector;
   }
   const patches=floorPatches(nav.walkable);
-  const floor=mirror(rectanglesGeometry(patches.map(r=>({x1:r.x1,x2:r.x2,y1:-r.z2,y2:-r.z1}))),'FloorReflection',true);
+  const floor=mirror(rectanglesGeometry(patches.map(r=>({x1:r.x1,x2:r.x2,y1:-r.z2,y2:-r.z1}))),'FloorReflection',true,
+    patches.map(r=>new THREE.Box3(new THREE.Vector3(r.x1,.003,r.z1),new THREE.Vector3(r.x2,.005,r.z2))));
   floor.rotation.x=-Math.PI/2;floor.position.y=.004;
   for(const corridor of [false,true]){
     const panes=windows.filter(w=>w.corridor===corridor);
     if(!panes.length)continue;
-    const r=mirror(rectanglesGeometry(panes.map(({box})=>({x1:box.min.x,x2:box.max.x,y1:box.min.y-2.4,y2:box.max.y-2.4}))),corridor?'CorridorGlassReflection':'HallGlassReflection',false);
+    const z=Math.max(...panes.map(w=>w.box.max.z))+.002;
+    const r=mirror(rectanglesGeometry(panes.map(({box})=>({x1:box.min.x,x2:box.max.x,y1:box.min.y-2.4,y2:box.max.y-2.4}))),corridor?'CorridorGlassReflection':'HallGlassReflection',false,
+      panes.map(({box})=>new THREE.Box3(new THREE.Vector3(box.min.x,box.min.y,z-.001),new THREE.Vector3(box.max.x,box.max.y,z+.001))));
     r.position.set(0,2.4,Math.max(...panes.map(w=>w.box.max.z))+.002);
   }
   return{setReduced(value){reduced=value;for(const r of mirrors){const width=reduced?512:r===floor?1024:768,height=Math.round(width*innerHeight/innerWidth);r.getRenderTarget().setSize(width,height);(r.material as THREE.ShaderMaterial).uniforms.texel.value.set(1/width,1/height);}resetCaptures.forEach(reset=>reset());}};

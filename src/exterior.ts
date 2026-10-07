@@ -71,10 +71,11 @@ export function finishExterior(model:THREE.Group,renderer:THREE.WebGLRenderer,su
     while(owner&&!owner.userData.exportSource)owner=owner.parent;
     const source=String(owner?.userData.exportSource??object.name);
     const materials=Array.isArray(object.material)?object.material:[object.material];
-    // Deterministic depth offsets resolve coplanar room/corridor seams.
+    // Use a small constant priority for coplanar modules. Slope-based positive
+    // offsets push grazing wall faces behind their bevels, exposing black cracks.
     const architecture=`${object.name} ${owner?.name??''} ${materials.map(m=>m.name).join(' ')}`;
     const group=architecture.includes('room-a')?1:architecture.includes('room-b')?2:architecture.includes('corridor')?3:0;
-    if(group)for(const material of materials){material.polygonOffset=true;material.polygonOffsetFactor=group;material.polygonOffsetUnits=group;}
+    if(group)for(const material of materials){material.polygonOffset=true;material.polygonOffsetFactor=0;material.polygonOffsetUnits=-group;}
     if(source.startsWith('Exterior_TreeAsset_')||source.startsWith('Exterior_Shrub_')){
       object.castShadow=true;
       for(const m of materials)if(m instanceof THREE.MeshStandardMaterial)m.envMapIntensity=.28;

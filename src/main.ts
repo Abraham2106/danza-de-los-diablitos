@@ -8,6 +8,7 @@ import {addPlanarReflections,type ReflectionController} from './reflections';
 import { assetUrl, parseExhibition, type Artwork, type Exhibition } from './data';
 import { canStand, clearPath, moveSafely, safeObservation, type Point } from './navigation';
 import {FocusSession,framingDistance,focusViewOffset,selectArtworkView,hasArtworkSight,type CameraPose} from './focus';
+import {FramePump,StaticRayIndex} from './performance';
 
 const icons = {
   arrow:'<path d="M4 9h10M10 5l4 4-4 4"/>', close:'<path d="m5 5 8 8M13 5l-8 8"/>',
@@ -30,7 +31,7 @@ app.innerHTML = `
       <button class="text-button" id="views-button">${svg('image')}<span>Vistas</span></button>
       <span class="toolbar-divider" aria-hidden="true"></span>
       <label class="quality-label" for="quality">Calidad</label>
-      <select class="quality" id="quality" aria-label="Calidad de la visita"><option value="auto">Automática</option><option value="high">Alta</option><option value="low">Reducida</option></select>
+      <select class="quality" id="quality" aria-label="Calidad de la visita"><option value="high">Alta</option><option value="low">Reducida (manual)</option></select>
       <button class="icon-button" id="help-button" aria-label="Cómo visitar">${svg('help')}</button>
     </nav>
   </header>
@@ -85,9 +86,15 @@ let geometryLoaded = false, visiting = false, moving = false;
 let point: Point = {x:0,z:0}, yaw = 0, pitch = 0;
 let currentArtwork: Artwork | undefined;
 const focusSession=new FocusSession();
-let selectedMode = 'auto', loweredQuality = false;
+let loweredQuality = false;
 let modelHits: THREE.Object3D[] = [];
+let rayIndex:StaticRayIndex;
 const raycaster = new THREE.Raycaster();
+const pointer=new THREE.Vector2();
+let pendingHover:{x:number;y:number}|undefined;
+let renderUntil=0,frameDirty=true,mapDirty=true;
+const frames=new FramePump(loop);
+function invalidate():void{frameDirty=true;renderUntil=performance.now()+80;frames.request();}
 const keys = new Set<string>();
 let dragging: {x:number;y:number;startX:number;startY:number;moved:number} | null = null;
 let hoverArtwork: Artwork | undefined;
@@ -137,11 +144,11 @@ document.addEventListener('keydown',event=>{
   if (event.key==='Escape' && detailDialog.open && !dialogs.some(d=>d!==detailDialog&&d.matches(':modal'))) {event.preventDefault();detailDialog.close();}
   if (!visiting||uiBlocked()||moving) return;
   const code=event.code;
-  if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyQ','KeyE','ShiftLeft','ShiftRight'].includes(code)) {event.preventDefault();keys.add(code);}
+  if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyQ','KeyE','ShiftLeft','ShiftRight'].includes(code)) {event.preventDefault();keys.add(code);frames.request();}
 });
 document.addEventListener('keyup',event=>keys.delete(event.code));
 window.addEventListener('blur',()=>{keys.clear();dragging=null;});
-document.addEventListener('visibilitychange',()=>{keys.clear();dragging=null;});
+document.addEventListener('visibilitychange',()=>{keys.clear();dragging=null;if(!document.hidden&&visiting)invalidate();});
 $('#help-button').addEventListener('click',()=>openDialog($<HTMLDialogElement>('#help-dialog')));
 $('#hint-help').addEventListener('click',()=>openDialog($<HTMLDialogElement>('#help-dialog')));
 for (const id of ['#catalog-button','#welcome-catalog']) $(id).addEventListener('click',()=>openDialog(catalogDialog));
@@ -196,7 +203,10 @@ function populateCatalog(): void {
 }
 
 function setLoad(message: string, percent?: number): void {$('#load-status').textContent=message;if(percent!==undefined)$('#load-progress').style.width=`${percent}%`;}
-function setCamera(): void {camera.position.set(point.x,1.65,point.z);camera.rotation.set(pitch,yaw,0,'YXZ');}
+function setCamera(): void {
+  if(camera.position.x===point.x&&camera.position.z===point.z&&camera.rotation.x===pitch&&camera.rotation.y===yaw)return;
+  camera.position.set(point.x,1.65,point.z);camera.rotation.set(pitch,yaw,0,'YXZ');camera.updateMatrixWorld();mapDirty=true;invalidate();
+}
 function initRenderer(): void {
   renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
   renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
@@ -243,9 +253,14 @@ async function initialize(): Promise<void> {
     // Fail early if a stale export dropped the interactive metadata entirely.
     const available=new Set<string>();modelHits.forEach(object=>{const id=artworkId(object);if(id)available.add(id);});
     if(available.size===0&&exhibition.artworks.length>0)toast('Las fichas están disponibles desde Obras. Esta versión de la sala no tiene selección directa.');
-    renderer!.compile(scene,camera);renderer!.render(scene,camera);
+    // Architecture, plants and lights are static. Initialize transforms once for all
+    // main, transmission and reflection passes; only the visitor camera changes.
+    scene.updateMatrixWorld(true);scene.matrixWorldAutoUpdate=false;
+    model.traverse(object=>{object.matrixAutoUpdate=false;object.matrixWorldAutoUpdate=false;});
+    rayIndex=new StaticRayIndex(modelHits);
+    await renderer!.compileAsync(scene,camera);renderer!.render(scene,camera);
     geometryLoaded=true;enterButton.disabled=false;welcome.dataset.ready='true';setLoad('La galería está lista. Puedes entrar cuando quieras.',100);
-    requestAnimationFrame(loop);
+    invalidate();
   } catch(error) {
     const message=error instanceof Error?error.message:'No se pudo abrir la galería.';
     setLoad(`${message} Puedes volver a cargar o consultar las obras y las vistas disponibles.`);$('#retry-load').hidden=false;enterButton.disabled=true;
@@ -254,7 +269,7 @@ async function initialize(): Promise<void> {
 }
 enterButton.addEventListener('click',()=>{
   if(!geometryLoaded)return;
-  visiting=true;welcome.hidden=true;canvas.hidden=false;$('.topbar').hidden=false;$('#hud').hidden=false;canvas.focus();drawMinimap();
+  visiting=true;welcome.hidden=true;canvas.hidden=false;$('.topbar').hidden=false;$('#hud').hidden=false;canvas.focus();drawMinimap();invalidate();
 });
 
 function artworkId(object: THREE.Object3D): string | undefined {
@@ -265,8 +280,8 @@ function artworkId(object: THREE.Object3D): string | undefined {
 }
 function pickArtwork(x: number,y: number): Artwork|undefined {
   if(!geometryLoaded||!visiting||uiBlocked())return;
-  const bounds=canvas.getBoundingClientRect();raycaster.setFromCamera(new THREE.Vector2((x-bounds.left)/bounds.width*2-1,-(y-bounds.top)/bounds.height*2+1),camera);
-  const hits=raycaster.intersectObjects(modelHits,false);
+  const bounds=canvas.getBoundingClientRect();raycaster.setFromCamera(pointer.set((x-bounds.left)/bounds.width*2-1,-(y-bounds.top)/bounds.height*2+1),camera);
+  const hits=rayIndex.intersect(raycaster);
   for(const hit of hits){
     // Ignore fully transparent helper meshes; real opaque architecture occludes works.
     const mesh=hit.object as THREE.Mesh;const material=Array.isArray(mesh.material)?mesh.material[hit.face?.materialIndex??0]:mesh.material;
@@ -276,12 +291,12 @@ function pickArtwork(x: number,y: number): Artwork|undefined {
 }
 canvas.addEventListener('pointerdown',event=>{if(event.button!==0||uiBlocked()||moving)return;canvas.focus();dragging={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,moved:0};canvas.setPointerCapture(event.pointerId);canvas.classList.add('grabbing');});
 canvas.addEventListener('pointermove',event=>{
-  if(dragging){const dx=event.clientX-dragging.x,dy=event.clientY-dragging.y;dragging.moved+=Math.abs(dx)+Math.abs(dy);yaw-=dx*.0045;pitch=THREE.MathUtils.clamp(pitch-dy*.0035,-1.1,1.1);dragging.x=event.clientX;dragging.y=event.clientY;setCamera();}
-  else if(!moving){hoverArtwork=pickArtwork(event.clientX,event.clientY);const hint=$('#hover-hint');hint.hidden=!hoverArtwork;canvas.classList.toggle('art-hover',!!hoverArtwork);if(hoverArtwork){hint.replaceChildren(textNode('strong',hoverArtwork.title),textNode('span','Clic para conocer la obra'));}}
+  if(dragging){const dx=event.clientX-dragging.x,dy=event.clientY-dragging.y;dragging.moved+=Math.abs(dx)+Math.abs(dy);yaw-=dx*.0045;pitch=THREE.MathUtils.clamp(pitch-dy*.0035,-1.1,1.1);dragging.x=event.clientX;dragging.y=event.clientY;invalidate();}
+  else if(!moving){pendingHover={x:event.clientX,y:event.clientY};frames.request();}
 });
-canvas.addEventListener('pointerup',event=>{if(dragging&&dragging.moved<6){const artwork=pickArtwork(event.clientX,event.clientY);if(artwork)showArtwork(artwork);}dragging=null;canvas.classList.remove('grabbing');if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);});
+canvas.addEventListener('pointerup',event=>{if(dragging)setCamera();if(dragging&&dragging.moved<6){const artwork=pickArtwork(event.clientX,event.clientY);if(artwork)showArtwork(artwork);}dragging=null;canvas.classList.remove('grabbing');if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);});
 canvas.addEventListener('pointercancel',()=>{dragging=null;canvas.classList.remove('grabbing');});
-canvas.addEventListener('pointerleave',()=>{if(!dragging){hoverArtwork=undefined;$('#hover-hint').hidden=true;canvas.classList.remove('art-hover');}});
+canvas.addEventListener('pointerleave',()=>{pendingHover=undefined;if(!dragging){hoverArtwork=undefined;$('#hover-hint').hidden=true;canvas.classList.remove('art-hover');}});
 
 let transition:{token:number;start:number;duration:number;from:CameraPose;to:CameraPose}|undefined;
 let pendingRestorePose:CameraPose|undefined;
@@ -292,18 +307,21 @@ function updateFocusProjection():void{
   if(focusSession.active&&detailDialog.open&&detailDialog.dataset.mode==='visit'&&innerWidth>760){
     const panel=detailDialog.getBoundingClientRect();camera.setViewOffset(innerWidth,innerHeight,focusViewOffset(innerWidth,panel.left),0,innerWidth,innerHeight);
   }else camera.clearViewOffset();
+  invalidate();
 }
 function focusTarget(artwork:Artwork):Point|null{
   const panel=detailDialog.getBoundingClientRect();const availableWidth=innerWidth>760?panel.left-64:innerWidth-64;
   const distance=framingDistance(artwork.width+.16,artwork.height+.16,camera.fov,innerHeight,availableWidth,innerHeight-200);
-  return selectArtworkView(artwork,exhibition.navigation,distance,candidate=>hasArtworkSight(artwork,candidate,modelHits,artworkId));
+  return selectArtworkView(artwork,exhibition.navigation,distance,candidate=>hasArtworkSight(artwork,candidate,modelHits,artworkId,ray=>rayIndex.intersect(ray)));
 }
 async function moveCameraTo(target:CameraPose,token:number,forceFade=false):Promise<void>{
   transition=undefined;keys.clear();dragging=null;moving=true;$('#hover-hint').hidden=true;canvas.classList.remove('art-hover');
+  pendingHover=undefined;hoverArtwork=undefined;
   if(reducedMotion.matches){$('#fade').classList.remove('active');if(focusSession.isCurrent(token)){applyPose(target);updateFocusProjection();moving=false;}return;}
   if(!forceFade&&clearPath(point,target.point,exhibition.navigation)&&!$('#fade').classList.contains('active')){
     const delta=Math.atan2(Math.sin(target.yaw-yaw),Math.cos(target.yaw-yaw));
     transition={token,start:performance.now(),duration:900,from:currentPose(),to:{...target,yaw:yaw+delta}};
+    frames.request();
   }else{
     $('#fade').classList.add('active');await new Promise(resolve=>setTimeout(resolve,270));
     if(!focusSession.isCurrent(token))return;
@@ -330,8 +348,8 @@ async function returnToVisit():Promise<void>{
 }
 
 const quality=$<HTMLSelectElement>('#quality');
-function applyQuality(low:boolean):void{loweredQuality=low;renderer?.setPixelRatio(low?Math.min(devicePixelRatio,1):Math.min(devicePixelRatio,1.5));renderer?.setSize(innerWidth,innerHeight);reflections?.setReduced(low);}
-quality.addEventListener('change',()=>{selectedMode=quality.value;applyQuality(selectedMode==='low');});
+function applyQuality(low:boolean):void{loweredQuality=low;renderer?.setPixelRatio(low?Math.min(devicePixelRatio,1):Math.min(devicePixelRatio,1.5));renderer?.setSize(innerWidth,innerHeight);reflections?.setReduced(low);invalidate();}
+quality.addEventListener('change',()=>applyQuality(quality.value==='low'));
 function drawMinimap():void{
   if(!exhibition)return;
   const map=$<HTMLCanvasElement>('#minimap');const ctx=map.getContext('2d')!;const width=map.clientWidth,height=map.clientHeight;
@@ -350,14 +368,14 @@ function drawMinimap():void{
   ctx.fillStyle='#285f72';for(const art of exhibition.artworks){ctx.beginPath();ctx.arc(x(art.position[0]),z(art.position[2]),1.1,0,Math.PI*2);ctx.fill();}
   ctx.save();ctx.translate(x(point.x),z(point.z));ctx.rotate(-yaw);ctx.fillStyle='#285f72';ctx.beginPath();ctx.moveTo(0,-6);ctx.lineTo(-3.5,4);ctx.lineTo(0,2);ctx.lineTo(3.5,4);ctx.closePath();ctx.fill();ctx.restore();
   $('#room-label').textContent=point.x<-6?'Sala A':point.x>6?'Sala B':'Pasillo';
+  mapDirty=false;
 }
 
-let previousTime=0,accumulator=0,frameCount=0,measuredTime=0,lastMap=0;
-function loop(time:number):void{
-  requestAnimationFrame(loop);if(!renderer||!geometryLoaded)return;
+let previousTime=0,accumulator=0,lastMap=0;
+function loop(time:number):boolean{
+  if(!renderer||!geometryLoaded||!visiting||document.hidden){previousTime=0;accumulator=0;return false;}
   const actualDelta=previousTime?(time-previousTime)/1000:1/60;previousTime=time;
-  if(document.hidden)return;
-  if(visiting){
+  {
     if(transition){
       if(!focusSession.isCurrent(transition.token)){transition=undefined;}
       else{const t=Math.min(1,(time-transition.start)/transition.duration),e=t*t*(3-2*t);point={x:transition.from.point.x+(transition.to.point.x-transition.from.point.x)*e,z:transition.from.point.z+(transition.to.point.z-transition.from.point.z)*e};yaw=transition.from.yaw+(transition.to.yaw-transition.from.yaw)*e;pitch=transition.from.pitch+(transition.to.pitch-transition.from.pitch)*e;if(t===1){transition=undefined;moving=false;}}
@@ -374,11 +392,17 @@ function loop(time:number):void{
       }
       accumulator-=step;
     }
-    setCamera();renderer.render(scene,camera);
-    if(time-lastMap>100){drawMinimap();lastMap=time;}
-    // Use uncapped wall-clock frame times, never the simulation delta, for quality decisions.
-    if(!uiBlocked()&&!moving){frameCount++;measuredTime+=actualDelta;if(measuredTime>4){const fps=frameCount/measuredTime;if(selectedMode==='auto'&&!loweredQuality&&fps<40){applyQuality(true);toast('La calidad se ha ajustado para que el recorrido sea más fluido.');}frameCount=0;measuredTime=0;}}
-  }else accumulator=0;
+    setCamera();
+    if(pendingHover){
+      const next=pickArtwork(pendingHover.x,pendingHover.y);pendingHover=undefined;
+      if(next?.id!==hoverArtwork?.id){hoverArtwork=next;const hint=$('#hover-hint');hint.hidden=!next;canvas.classList.toggle('art-hover',!!next);if(next)hint.replaceChildren(textNode('strong',next.title),textNode('span','Clic para conocer la obra'));}
+    }
+    // Give throttled mirrors time to capture the final pose before going idle.
+    if(frameDirty||time<renderUntil){renderer.render(scene,camera);if(mapDirty&&time-lastMap>100){drawMinimap();lastMap=time;}frameDirty=false;}
+  }
+  const active=!!transition||(!uiBlocked()&&!moving&&keys.size>0)||time<renderUntil;
+  if(!active){if(mapDirty)drawMinimap();previousTime=0;accumulator=0;}
+  return active;
 }
 
 void initialize();

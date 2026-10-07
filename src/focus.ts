@@ -1,7 +1,7 @@
 import type {Point} from './navigation';
 import {canStand} from './navigation';
 import type {Artwork,Navigation,Vec3} from './data';
-import {Mesh,Raycaster,Vector3,type Object3D} from 'three';
+import {Mesh,Raycaster,Vector3,type Object3D,type Intersection} from 'three';
 export interface CameraPose {point:Point;yaw:number;pitch:number;}
 const copyPose=(pose:CameraPose):CameraPose=>({point:{...pose.point},yaw:pose.yaw,pitch:pose.pitch});
 
@@ -59,11 +59,11 @@ export function selectArtworkView(artwork:Pick<Artwork,'position'|'rotation'>,na
 }
 
 /** Validate real scene geometry against nine probes across the painting surface. */
-export function hasArtworkSight(artwork:Pick<Artwork,'id'|'position'|'rotation'|'width'|'height'>,candidate:Point,objects:Object3D[],identify:(object:Object3D)=>string|undefined):boolean{
+export function hasArtworkSight(artwork:Pick<Artwork,'id'|'position'|'rotation'|'width'|'height'>,candidate:Point,objects:Object3D[],identify:(object:Object3D)=>string|undefined,intersect?:(ray:Raycaster)=>Intersection[]):boolean{
   const ray=new Raycaster();const origin=new Vector3(candidate.x,1.65,candidate.z);
   for(const probe of artworkProbes(artwork)){
     const target=new Vector3(...probe);const length=origin.distanceTo(target);ray.set(origin,target.sub(origin).normalize());ray.near=.01;ray.far=length+.08;
-    for(const hit of ray.intersectObjects(objects,false)){
+    for(const hit of intersect?intersect(ray):ray.intersectObjects(objects,false)){
       let visible=true;for(let ancestor:Object3D|null=hit.object;ancestor;ancestor=ancestor.parent)if(!ancestor.visible){visible=false;break;}
       if(!visible||!(hit.object instanceof Mesh))continue;
       const mesh=hit.object;const material=Array.isArray(mesh.material)?mesh.material[hit.face?.materialIndex??0]:mesh.material;

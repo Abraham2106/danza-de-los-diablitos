@@ -37,6 +37,8 @@ Documentación oficial: [Vite en Vercel](https://vercel.com/docs/frameworks/fron
 
 ## Contenido y edición
 
+La visita utiliza calidad alta por defecto y renderizado a demanda para evitar trabajo en reposo. El [informe de rendimiento](docs/RENDIMIENTO.md) documenta las mediciones, las comprobaciones y la corrección de las esquinas negras durante el movimiento.
+
 - `src/`: aplicación y navegación.
 - `public/models/`: geometría exportada de Blender y materiales.
 - `public/data/exhibition.json`: títulos, descripciones, créditos y posiciones de enfoque.

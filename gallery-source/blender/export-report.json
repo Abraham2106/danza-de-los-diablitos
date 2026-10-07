@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "file": "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\web\\public\\models\\gallery.glb",
+  "bytes": 11265516,
+  "artworks": 12,
+  "vertices": 134811,
+  "triangles": 118547,
+  "sourceVertices": 231384,
+  "sourceTriangles": 235143,
+  "baked": true,
+  "atlases": [
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-room-a.png",
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-corridor.png",
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-room-b.png"
+  ],
+  "atlasSize": 4096,
+  "samples": 32,
+  "webTextureFormat": "JPEG",
+  "webTextureQuality": 92,
+  "atlasSourceFormat": "PNG",
+  "lightingDenoiser": "OpenImageDenoise RT high, linear RGB",
+  "denoisedAtlases": [
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-room-a-denoised.png",
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-corridor-denoised.png",
+    "C:\\Users\\solan\\Documents\\Codex\\2026-10-07\\pla\\outputs\\gallery\\blender\\baked-textures\\lighting-room-b-denoised.png"
+  ],
+  "visitImageMaxSide": 1536,
+  "visitImagesResized": 2,
+  "pbrImageMaxSide": 1024,
+  "pbrMapsPrepared": 9,
+  "pbrMapBitDepth": 8,
+  "normalImageMaxSide": 512,
+  "alphaImageMaxSide": 512,
+  "durationSeconds": 251.14,
+  "warnings": [],
+  "sourceSHA256": "4db1614eb89b299c2187cdd76671da26897cc832f0525dbe200af41a5241fb53",
+  "sourceUnchanged": true,
+  "navigation": {
+    "boxes": 12,
+    "orientedBoxes": 11,
+    "circles": 1,
+    "walkable": 3
+  }
+}

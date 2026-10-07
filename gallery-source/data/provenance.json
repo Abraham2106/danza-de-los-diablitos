@@ -1,0 +1,163 @@
+{
+  "exhibition": "Baile de los Diablitos",
+  "contentSource": "Texto y doce archivos adjuntos aportados por el usuario",
+  "dateContext": "La crónica relata el 31 de diciembre de 2024 al 2 de enero de 2025; no consta una fecha individual en las fotografías",
+  "images": [
+    {
+      "id": "art-001",
+      "originalFile": "artworks/boruca-originals/1-baile.jpeg",
+      "sha256": "834acce2a6b699276f841f13ad76937431ff39008e9ab2b6f60eee2a39078c01",
+      "dimensions": [
+        2048,
+        1536
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-002",
+      "originalFile": "artworks/boruca-originals/2-diablito-mayor.jpeg",
+      "sha256": "079531faf7a980bd5f187c514bfa0746a71495c42593114b8d3beb4eefca9c9f",
+      "dimensions": [
+        2048,
+        1536
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-003",
+      "originalFile": "artworks/boruca-originals/3-mascaras.jpeg",
+      "sha256": "6add6fd6578b25066417792e60c2484e43fcb5c412b54ac51ef19372d3d46023",
+      "dimensions": [
+        1024,
+        640
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-004",
+      "originalFile": "artworks/boruca-originals/4-mascaras-mas-mascaras.jpeg",
+      "sha256": "1d5005ed24633f2ecc400d88d582473c85eb5e459f2d13adec5f24a0ef4b08c0",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-005",
+      "originalFile": "artworks/boruca-originals/4-mascaras.jpeg",
+      "sha256": "634cd9f567162a1e4f973b8545147067904926af20da0ef8ceb7c7d43d566a8e",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-006",
+      "originalFile": "artworks/boruca-originals/5-diablitos.jpeg",
+      "sha256": "b9ac428776a357802c3ff86e6ab6ce54ee851bb72329b68f79ffb5a18d5749f1",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-007",
+      "originalFile": "artworks/boruca-originals/6-diablitos.jpeg",
+      "sha256": "8b42d98b81685236669ea084c1652474f1265970bb0062a67f0d7238f7f90e6e",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-008",
+      "originalFile": "artworks/boruca-originals/7-mascaras.jpeg",
+      "sha256": "e967c2d49a708048538c8bc1b70739ab91d38f95d4c16998fc03fba2f7ca0ebd",
+      "dimensions": [
+        1152,
+        1536
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-009",
+      "originalFile": "artworks/boruca-originals/8-musica-diablitos.jpeg",
+      "sha256": "faf36209009055d3dd7b80c39752801beaaae195cd510fe83052e132d02c2a5c",
+      "dimensions": [
+        1024,
+        640
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-010",
+      "originalFile": "artworks/boruca-originals/9-toro-daiblitos.jpeg",
+      "sha256": "d3b07fe52adfbb049293adc4b497971ac7c09950448347c816607b248e3a774d",
+      "dimensions": [
+        1024,
+        640
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-011",
+      "originalFile": "artworks/boruca-originals/5-conquistadores-derroatados.jpeg",
+      "sha256": "3109474f8e35e87f608043b4df5cc86703859c2f6343b5ba3d56cbf08fd1b902",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    },
+    {
+      "id": "art-012",
+      "originalFile": "artworks/boruca-originals/10-fogata.jpeg",
+      "sha256": "64922f14e572d70b493024885571ca9149a436390b51e181d7a2427e1c7ee5be",
+      "dimensions": [
+        1024,
+        640
+      ],
+      "creditFromUserText": "Alonso Solano / El Observador",
+      "visibleWatermark": "©PerroMudo",
+      "license": "No indicada por el usuario; no se atribuye una licencia libre",
+      "imageEdits": "Orientación EXIF y copia JPEG para web; sin recorte ni eliminación de marca de agua"
+    }
+  ]
+}

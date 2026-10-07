@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "title": "Baile de los Diablitos",
+  "subtitle": "Una tradición viva del pueblo Boruca · Máscaras, música y resistencia",
+  "source": "Crónica y fotografías aportadas por el usuario · Alonso Solano / El Observador",
+  "model": "models/gallery.glb",
+  "artworks": [
+    {
+      "id": "art-001",
+      "title": "El baile y la resistencia",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-001.jpg",
+      "position": [
+        -18.0,
+        1.7,
+        8.845
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 2.4000000953674587,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "El toro y los diablitos se encuentran en las calles de Boruca. La celebración representa la resistencia del pueblo indígena frente a la conquista: el toro encarna a los conquistadores y los diablitos al pueblo Boruca. La crónica aportada relata la festividad del cierre de 2024 y el inicio de 2025.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -18.0,
+          1.65,
+          6.645
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-002",
+      "title": "El diablito mayor",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-002.jpg",
+      "position": [
+        -10.0,
+        1.7,
+        8.845
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 2.4000000953674587,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "Una máscara de expresión marcada, plumas y tejidos acompaña al participante durante el recorrido. El diablito mayor es una figura de referencia en el baile. Esta fotografía abre una mirada a quienes mantienen viva la ceremonia y a la fuerza expresiva de sus máscaras.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -10.0,
+          1.65,
+          6.645
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-003",
+      "title": "Animales en las máscaras",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-003.jpg",
+      "position": [
+        -6.145,
+        1.7,
+        6.3
+      ],
+      "rotation": -1.5707962512969953,
+      "width": 2.4000000953674387,
+      "height": 1.5,
+      "frame": "metal",
+      "description": "Reptiles y felinos aparecen en las máscaras de este encuentro. La crónica destaca diseños de culebras, jaguares, aves y calaveras, junto con la búsqueda de creaciones cada vez más originales. Los colores y las formas hacen de cada máscara una pieza singular.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -8.345,
+          1.65,
+          6.3
+        ],
+        "yaw": -1.5707963267948966
+      }
+    },
+    {
+      "id": "art-004",
+      "title": "El rostro entre las aves",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-004.jpg",
+      "position": [
+        -6.145,
+        1.7,
+        -6.3
+      ],
+      "rotation": -1.5707962512969953,
+      "width": 2.4000000953674387,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "Un búho corona una máscara rodeada de plumas y otras figuras. Durante la celebración, las máscaras reúnen talla, pintura y creatividad. Una máscara que fue «jugada» es una pieza que participó en el baile y conserva la memoria de esa experiencia.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -8.345,
+          1.65,
+          -6.3
+        ],
+        "yaw": -1.5707963267948966
+      }
+    },
+    {
+      "id": "art-005",
+      "title": "Color, plumas y movimiento",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-005.jpg",
+      "position": [
+        -14.0,
+        1.7,
+        -2.585
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 2.4000000953674587,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "Las plumas rojas, las máscaras y la pintura corporal forman parte de la presencia visual de los participantes. A estos elementos se suman vestimentas de gangoche y hojas de plátano, descritas en la crónica. El baile convierte las piezas elaboradas por los artesanos en imágenes en movimiento.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -14.0,
+          1.65,
+          -4.785
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-006",
+      "title": "La fuerza del grupo",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-006.jpg",
+      "position": [
+        -14.0,
+        1.7,
+        -2.415
+      ],
+      "rotation": 0.0,
+      "width": 2.4000000953674316,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "Los participantes avanzan juntos, con máscaras, plumas y varas. La lucha ritual se desarrolla durante el recorrido por el pueblo: el toro y los diablitos se detienen en distintas casas y continúan sus enfrentamientos. La participación colectiva sostiene el ritmo de la celebración.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -14.0,
+          1.65,
+          -0.215
+        ],
+        "yaw": -0.0
+      }
+    },
+    {
+      "id": "art-007",
+      "title": "Gestos del enfrentamiento",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-007.jpg",
+      "position": [
+        -14.0,
+        1.7,
+        2.915
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 2.4000000953674587,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "Un participante señala hacia delante en medio del recorrido. Los diablitos provocan al toro y este responde con embestidas dentro de la representación ritual. Los gestos, la pintura corporal y las máscaras hacen visible la energía de la lucha narrada en el Baile de los Diablitos.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -14.0,
+          1.65,
+          0.715
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-008",
+      "title": "La flauta y el jaguar",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-008.jpg",
+      "position": [
+        0.0,
+        1.7,
+        3.495
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 1.4624999761581587,
+      "height": 1.9500000476837158,
+      "frame": "metal",
+      "description": "El músico toca una flauta bajo una máscara con motivos de jaguar y un amplio conjunto de plumas. La música acompaña el baile y enlaza el movimiento de los participantes. Flautas, tambores, cuernos y caracoles forman parte del ambiente descrito en la crónica.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          -0.0,
+          1.65,
+          1.295
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-009",
+      "title": "El pulso de la celebración",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-009.jpg",
+      "position": [
+        6.145,
+        1.7,
+        6.3
+      ],
+      "rotation": 1.5707962512969953,
+      "width": 2.4000000953674387,
+      "height": 1.5,
+      "frame": "metal",
+      "description": "Un tambor y varias flautas acompañan el recorrido. La música está presente durante los enfrentamientos y en el cierre de las fiestas. En las casas también se comparte chicha, una bebida de maíz fermentado que la crónica relaciona con la energía necesaria para sostener los días de celebración.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          8.345,
+          1.65,
+          6.3
+        ],
+        "yaw": 1.5707963267948966
+      }
+    },
+    {
+      "id": "art-010",
+      "title": "El toro y los diablitos",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-010.jpg",
+      "position": [
+        14.0,
+        1.7,
+        8.845
+      ],
+      "rotation": -3.1415925025939906,
+      "width": 2.4000000953674587,
+      "height": 1.5,
+      "frame": "metal",
+      "description": "El toro, llamado Xaman en el texto aportado, es una estructura de madera cubierta con gangoche y una cara de toro. La crónica indica un peso aproximado de 40 kilos, por lo que varios participantes se turnan para llevarlo. Su encuentro con los diablitos representa la batalla entre conquista y resistencia.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          14.0,
+          1.65,
+          6.645
+        ],
+        "yaw": -3.141592653589793
+      }
+    },
+    {
+      "id": "art-011",
+      "title": "La Tumbazón",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-011.jpg",
+      "position": [
+        13.915,
+        1.7,
+        -0.0
+      ],
+      "rotation": -1.5707961320877128,
+      "width": 2.400000095367477,
+      "height": 1.7999999523162842,
+      "frame": "metal",
+      "description": "En el cierre de la representación, el toro derrota a los diablitos y estos caen: es el momento conocido como La Tumbazón. Después se levantan, buscan al toro y lo conducen hacia el cierre de la ceremonia. La escena enlaza la caída con la continuidad y la resistencia del pueblo Boruca.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          11.715,
+          1.65,
+          0.0
+        ],
+        "yaw": -1.5707963267948966
+      }
+    },
+    {
+      "id": "art-012",
+      "title": "El fuego del cierre",
+      "artist": "Alonso Solano / El Observador",
+      "year": "Boruca · Serie fotográfica",
+      "image": "artworks/art-012.jpg",
+      "position": [
+        14.085,
+        1.7,
+        -0.0
+      ],
+      "rotation": 1.5707961320877128,
+      "width": 2.400000095367477,
+      "height": 1.5,
+      "frame": "metal",
+      "description": "La quema del toro cierra la celebración narrada en la crónica, entre música, gritos y el encuentro de participantes y visitantes. El fuego marca el final de la representación y la fuerza de una tradición que continúa viva. La fotografía recoge ese ambiente nocturno sin recortar su marca de autor.",
+      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "observation": {
+        "position": [
+          16.285,
+          1.65,
+          0.0
+        ],
+        "yaw": 1.5707963267948966
+      }
+    }
+  ],
+  "navigation": {
+    "boxes": [
+      {
+        "minX": -22.149999618530273,
+        "maxX": -21.850000381469727,
+        "minZ": -9.149999618530273,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": -22.149999618530273,
+        "maxX": -5.850000381469727,
+        "minZ": 8.850000381469727,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": -6.150000095367432,
+        "maxX": -5.849999904632568,
+        "minZ": 3.499999761581421,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": -6.150000095367432,
+        "maxX": -5.849999904632568,
+        "minZ": -9.149999618530273,
+        "maxZ": -3.499999761581421
+      },
+      {
+        "minX": 21.850000381469727,
+        "maxX": 22.149999618530273,
+        "minZ": -9.149999618530273,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": 5.850000381469727,
+        "maxX": 22.149999618530273,
+        "minZ": 8.850000381469727,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": 5.849999904632568,
+        "maxX": 6.150000095367432,
+        "minZ": 3.499999761581421,
+        "maxZ": 9.149999618530273
+      },
+      {
+        "minX": 5.849999904632568,
+        "maxX": 6.150000095367432,
+        "minZ": -9.149999618530273,
+        "maxZ": -3.499999761581421
+      },
+      {
+        "minX": -6.0,
+        "maxX": 6.0,
+        "minZ": 3.5,
+        "maxZ": 3.8000001907348633
+      },
+      {
+        "minX": -22.0,
+        "maxX": -6.0,
+        "minZ": -9.085000038146973,
+        "maxZ": -8.914999961853027
+      },
+      {
+        "minX": 6.0,
+        "maxX": 22.0,
+        "minZ": -9.085000038146973,
+        "maxZ": -8.914999961853027
+      },
+      {
+        "minX": -6.0,
+        "maxX": 6.0,
+        "minZ": -3.5850000381469727,
+        "maxZ": -3.4149999618530273
+      }
+    ],
+    "orientedBoxes": [
+      {
+        "x": -14.0,
+        "z": -2.5,
+        "width": 6.05,
+        "depth": 0.2099999964237213,
+        "rotation": -0.0
+      },
+      {
+        "x": -14.0,
+        "z": 3.0,
+        "width": 6.05,
+        "depth": 0.2099999964237213,
+        "rotation": -0.0
+      },
+      {
+        "x": 14.0,
+        "z": -0.0,
+        "width": 0.2099999964237213,
+        "depth": 8.05,
+        "rotation": -0.0
+      },
+      {
+        "x": -19.600000381469727,
+        "z": -0.0,
+        "width": 0.5900000214576722,
+        "depth": 3.05,
+        "rotation": -0.0
+      },
+      {
+        "x": 10.600000381469727,
+        "z": -0.0,
+        "width": 0.5900000214576722,
+        "depth": 3.05,
+        "rotation": -0.0
+      },
+      {
+        "x": -20.799999237060547,
+        "z": -7.5,
+        "width": 0.8099999904632569,
+        "depth": 0.8099999904632569,
+        "rotation": -0.0
+      },
+      {
+        "x": -7.400000095367432,
+        "z": 7.5,
+        "width": 0.8099999904632569,
+        "depth": 0.8099999904632569,
+        "rotation": -0.0
+      },
+      {
+        "x": 7.400000095367432,
+        "z": -7.5,
+        "width": 0.8099999904632569,
+        "depth": 0.8099999904632569,
+        "rotation": -0.0
+      },
+      {
+        "x": 20.799999237060547,
+        "z": 7.5,
+        "width": 0.8099999904632569,
+        "depth": 0.8099999904632569,
+        "rotation": -0.0
+      },
+      {
+        "x": -8.5,
+        "z": -0.0,
+        "width": 1.919999966621399,
+        "depth": 1.919999966621399,
+        "rotation": -0.0
+      },
+      {
+        "x": 18.0,
+        "z": -1.7999999523162842,
+        "width": 1.919999966621399,
+        "depth": 1.919999966621399,
+        "rotation": -0.0
+      }
+    ],
+    "circles": [
+      {
+        "x": 0.0,
+        "z": -0.0,
+        "r": 0.2800000011920929
+      }
+    ],
+    "walkable": [
+      {
+        "x1": -22.149999618530273,
+        "x2": -5.850000381469727,
+        "z1": -9.149999618530273,
+        "z2": 9.149999618530273
+      },
+      {
+        "x1": -6.0,
+        "x2": 6.0,
+        "z1": -3.5,
+        "z2": 3.5
+      },
+      {
+        "x1": 5.850000381469727,
+        "x2": 22.149999618530273,
+        "z1": -9.149999618530273,
+        "z2": 9.149999618530273
+      }
+    ],
+    "spawn": {
+      "position": [
+        -4.5,
+        1.65,
+        -0.0
+      ],
+      "yaw": 1.5707963267948966
+    }
+  },
+  "renders": [
+    "renders/01-sala-a.png",
+    "renders/02-sala-a.png",
+    "renders/03-pasillo.png",
+    "renders/04-sala-b.png",
+    "renders/05-sala-b.png",
+    "renders/06-detalle.png"
+  ]
+}

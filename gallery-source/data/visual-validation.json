@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-07",
+  "exhibition": "Baile de los Diablitos",
+  "sourceSHA256": "4db1614eb89b299c2187cdd76671da26897cc832f0525dbe200af41a5241fb53",
+  "productionUrl": "http://127.0.0.1:5173/",
+  "unitTestsPassed": 29,
+  "productionBuildPassed": true,
+  "artworkFocus": {"tested": 12, "unobstructedVisitMode": 12, "fallback": 0, "allDetailImagesLoaded": true},
+  "cameraReturn": {"walkAndTurnBeforeFocus": true, "artworkIndex": 11, "quality": "low", "viewport": [1440,901], "comparison": "RGB pixels in a 1050 by 480 viewport region after closing the detail", "maxPixelDifference": 0, "meanPixelDifference": 0},
+  "qualityAndResize": {"highLowHigh": "passed", "viewportSizes": [[1920,863],[1440,900]]},
+  "browserPageErrors": [],
+  "reflections": {"sharedPlanes": 3, "floor": "view-dependent, mipmap filtered", "windows": "view-dependent with Fresnel opacity and transmission", "visualInspection": "floor and angled glass screenshots reviewed", "limits": "Approximate planar reflections, not Cycles multi-bounce path tracing. The grouping assumes original coplanar windows."},
+  "renders": {"completedPairs": 6, "sourceHashesMatch": true, "pngDimensions": [3840,2160], "masters": "half-float ZIP EXR", "maxSamples": 128, "adaptiveThreshold": 0.025, "denoised": true},
+  "sourceImages": {"missingImageNodes": 0, "fileImagesPacked": true},
+  "screenshots": ["previews/portada-boruca.png", "previews/fotografias-boruca.jpg"]
+}

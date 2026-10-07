@@ -1,0 +1,578 @@
+[
+  {
+    "path": "Actualizar-Web.ps1",
+    "bytes": 1119
+  },
+  {
+    "path": "artworks/boruca-originals/1-baile.jpeg",
+    "bytes": 138967
+  },
+  {
+    "path": "artworks/boruca-originals/10-fogata.jpeg",
+    "bytes": 46289
+  },
+  {
+    "path": "artworks/boruca-originals/2-diablito-mayor.jpeg",
+    "bytes": 198703
+  },
+  {
+    "path": "artworks/boruca-originals/3-mascaras.jpeg",
+    "bytes": 150579
+  },
+  {
+    "path": "artworks/boruca-originals/4-mascaras-mas-mascaras.jpeg",
+    "bytes": 160480
+  },
+  {
+    "path": "artworks/boruca-originals/4-mascaras.jpeg",
+    "bytes": 110602
+  },
+  {
+    "path": "artworks/boruca-originals/5-conquistadores-derroatados.jpeg",
+    "bytes": 137332
+  },
+  {
+    "path": "artworks/boruca-originals/5-diablitos.jpeg",
+    "bytes": 62112
+  },
+  {
+    "path": "artworks/boruca-originals/6-diablitos.jpeg",
+    "bytes": 91365
+  },
+  {
+    "path": "artworks/boruca-originals/7-mascaras.jpeg",
+    "bytes": 194874
+  },
+  {
+    "path": "artworks/boruca-originals/8-musica-diablitos.jpeg",
+    "bytes": 104811
+  },
+  {
+    "path": "artworks/boruca-originals/9-toro-daiblitos.jpeg",
+    "bytes": 134705
+  },
+  {
+    "path": "artworks/originals/art-001.jpg",
+    "bytes": 849983
+  },
+  {
+    "path": "artworks/originals/art-002.jpg",
+    "bytes": 505036
+  },
+  {
+    "path": "artworks/originals/art-003.jpg",
+    "bytes": 1511965
+  },
+  {
+    "path": "artworks/originals/art-004.jpg",
+    "bytes": 1043927
+  },
+  {
+    "path": "artworks/originals/art-005.jpg",
+    "bytes": 1165558
+  },
+  {
+    "path": "artworks/originals/art-006.jpg",
+    "bytes": 743751
+  },
+  {
+    "path": "artworks/originals/art-007.jpg",
+    "bytes": 932823
+  },
+  {
+    "path": "artworks/originals/art-008.jpg",
+    "bytes": 605047
+  },
+  {
+    "path": "artworks/originals/art-009.jpg",
+    "bytes": 658998
+  },
+  {
+    "path": "artworks/originals/art-010.jpg",
+    "bytes": 1390436
+  },
+  {
+    "path": "artworks/originals/art-011.jpg",
+    "bytes": 580191
+  },
+  {
+    "path": "artworks/originals/art-012.jpg",
+    "bytes": 691601
+  },
+  {
+    "path": "artworks/originals/art-013.jpg",
+    "bytes": 833562
+  },
+  {
+    "path": "artworks/originals/art-014.jpg",
+    "bytes": 1689053
+  },
+  {
+    "path": "artworks/originals/art-015.jpg",
+    "bytes": 900407
+  },
+  {
+    "path": "assets/trees/BirchTree_1.blend",
+    "bytes": 1055536
+  },
+  {
+    "path": "assets/trees/LEEME.md",
+    "bytes": 597
+  },
+  {
+    "path": "assets/trees/NormalTree_1.blend",
+    "bytes": 1466108
+  },
+  {
+    "path": "assets/trees/NormalTree_3.blend",
+    "bytes": 1260328
+  },
+  {
+    "path": "assets/trees/provenance.json",
+    "bytes": 2081
+  },
+  {
+    "path": "assets/trees/Textures/BirchTree_Bark.png",
+    "bytes": 23133683
+  },
+  {
+    "path": "assets/trees/Textures/BirchTree_Bark_Normal.png",
+    "bytes": 22721595
+  },
+  {
+    "path": "assets/trees/Textures/BirchTree_Leaves.png",
+    "bytes": 77836
+  },
+  {
+    "path": "assets/trees/Textures/Leaves_BW.png",
+    "bytes": 105528
+  },
+  {
+    "path": "assets/trees/Textures/NormalTree_Bark.png",
+    "bytes": 20875728
+  },
+  {
+    "path": "assets/trees/Textures/NormalTree_Bark_Normal.png",
+    "bytes": 19087640
+  },
+  {
+    "path": "assets/trees/Textures/NormalTree_Leaves.png",
+    "bytes": 74828
+  },
+  {
+    "path": "ATRIBUCIONES.md",
+    "bytes": 2480
+  },
+  {
+    "path": "blender/baked-textures/lighting-corridor-denoised.json",
+    "bytes": 187
+  },
+  {
+    "path": "blender/baked-textures/lighting-corridor-denoised.png",
+    "bytes": 7462010
+  },
+  {
+    "path": "blender/baked-textures/lighting-corridor.json",
+    "bytes": 118
+  },
+  {
+    "path": "blender/baked-textures/lighting-corridor.png",
+    "bytes": 19606160
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-a-denoised.json",
+    "bytes": 187
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-a-denoised.png",
+    "bytes": 5609904
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-a.json",
+    "bytes": 118
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-a.png",
+    "bytes": 14910500
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-b-denoised.json",
+    "bytes": 187
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-b-denoised.png",
+    "bytes": 4608137
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-b.json",
+    "bytes": 118
+  },
+  {
+    "path": "blender/baked-textures/lighting-room-b.png",
+    "bytes": 12159557
+  },
+  {
+    "path": "blender/export-report.json",
+    "bytes": 1792
+  },
+  {
+    "path": "blender/gallery.blend",
+    "bytes": 138061160
+  },
+  {
+    "path": "blender/scripts/__pycache__/denoise_lighting.cpython-313.pyc",
+    "bytes": 7581
+  },
+  {
+    "path": "blender/scripts/__pycache__/export_gallery.cpython-312.pyc",
+    "bytes": 52425
+  },
+  {
+    "path": "blender/scripts/build_gallery.py",
+    "bytes": 15295
+  },
+  {
+    "path": "blender/scripts/denoise_lighting.py",
+    "bytes": 4299
+  },
+  {
+    "path": "blender/scripts/export_gallery.py",
+    "bytes": 33345
+  },
+  {
+    "path": "blender/scripts/finish_gallery.py",
+    "bytes": 19552
+  },
+  {
+    "path": "blender/scripts/import_boruca.py",
+    "bytes": 5119
+  },
+  {
+    "path": "blender/scripts/personalize_gallery.py",
+    "bytes": 7247
+  },
+  {
+    "path": "blender/scripts/render_gallery.ps1",
+    "bytes": 1121
+  },
+  {
+    "path": "blender/scripts/render_gallery.py",
+    "bytes": 5475
+  },
+  {
+    "path": "blender/scripts/validate_gallery.py",
+    "bytes": 916
+  },
+  {
+    "path": "data/asset-report.json",
+    "bytes": 3457
+  },
+  {
+    "path": "data/boruca-import.json",
+    "bytes": 6258
+  },
+  {
+    "path": "data/delivery-inventory.json",
+    "bytes": 10379
+  },
+  {
+    "path": "data/exhibition.json",
+    "bytes": 16551
+  },
+  {
+    "path": "data/provenance.json",
+    "bytes": 6926
+  },
+  {
+    "path": "data/visual-validation.json",
+    "bytes": 1429
+  },
+  {
+    "path": "data/web-render-report.json",
+    "bytes": 1076
+  },
+  {
+    "path": "GUIA-DE-EDICION.md",
+    "bytes": 8010
+  },
+  {
+    "path": "LEEME.md",
+    "bytes": 5154
+  },
+  {
+    "path": "previews/01_sala_a_principal.png",
+    "bytes": 535044
+  },
+  {
+    "path": "previews/02_sala_a_contravista.png",
+    "bytes": 532447
+  },
+  {
+    "path": "previews/03_pasillo.png",
+    "bytes": 467645
+  },
+  {
+    "path": "previews/04_sala_b_principal.png",
+    "bytes": 458198
+  },
+  {
+    "path": "previews/05_sala_b_contravista.png",
+    "bytes": 512808
+  },
+  {
+    "path": "previews/06_detalle_obra.png",
+    "bytes": 664340
+  },
+  {
+    "path": "previews/fotografias-boruca.jpg",
+    "bytes": 1016963
+  },
+  {
+    "path": "previews/portada-boruca.png",
+    "bytes": 616811
+  },
+  {
+    "path": "previews/render_report.json",
+    "bytes": 1509
+  },
+  {
+    "path": "previews/visita-actualizada.png",
+    "bytes": 899035
+  },
+  {
+    "path": "renders/01_sala_a_principal.exr",
+    "bytes": 17768023
+  },
+  {
+    "path": "renders/01_sala_a_principal.png",
+    "bytes": 29774449
+  },
+  {
+    "path": "renders/02_sala_a_contravista.exr",
+    "bytes": 17234783
+  },
+  {
+    "path": "renders/02_sala_a_contravista.png",
+    "bytes": 29330789
+  },
+  {
+    "path": "renders/03_pasillo.exr",
+    "bytes": 16876681
+  },
+  {
+    "path": "renders/03_pasillo.png",
+    "bytes": 28233204
+  },
+  {
+    "path": "renders/04_sala_b_principal.exr",
+    "bytes": 15751073
+  },
+  {
+    "path": "renders/04_sala_b_principal.png",
+    "bytes": 27811531
+  },
+  {
+    "path": "renders/05_sala_b_contravista.exr",
+    "bytes": 17183827
+  },
+  {
+    "path": "renders/05_sala_b_contravista.png",
+    "bytes": 28615298
+  },
+  {
+    "path": "renders/06_detalle_obra.exr",
+    "bytes": 19449702
+  },
+  {
+    "path": "renders/06_detalle_obra.png",
+    "bytes": 31515703
+  },
+  {
+    "path": "renders/CONTACTO.jpg",
+    "bytes": 285364
+  },
+  {
+    "path": "renders/render_report.json",
+    "bytes": 1835
+  },
+  {
+    "path": "Visitar-Galeria.ps1",
+    "bytes": 783
+  },
+  {
+    "path": "web/.gitignore",
+    "bytes": 27
+  },
+  {
+    "path": "web/index.html",
+    "bytes": 1013
+  },
+  {
+    "path": "web/package-lock.json",
+    "bytes": 55959
+  },
+  {
+    "path": "web/package.json",
+    "bytes": 421
+  },
+  {
+    "path": "web/public/artworks/art-001.jpg",
+    "bytes": 138967
+  },
+  {
+    "path": "web/public/artworks/art-002.jpg",
+    "bytes": 198703
+  },
+  {
+    "path": "web/public/artworks/art-003.jpg",
+    "bytes": 150579
+  },
+  {
+    "path": "web/public/artworks/art-004.jpg",
+    "bytes": 160480
+  },
+  {
+    "path": "web/public/artworks/art-005.jpg",
+    "bytes": 110602
+  },
+  {
+    "path": "web/public/artworks/art-006.jpg",
+    "bytes": 62112
+  },
+  {
+    "path": "web/public/artworks/art-007.jpg",
+    "bytes": 91365
+  },
+  {
+    "path": "web/public/artworks/art-008.jpg",
+    "bytes": 194874
+  },
+  {
+    "path": "web/public/artworks/art-009.jpg",
+    "bytes": 104811
+  },
+  {
+    "path": "web/public/artworks/art-010.jpg",
+    "bytes": 134705
+  },
+  {
+    "path": "web/public/artworks/art-011.jpg",
+    "bytes": 137332
+  },
+  {
+    "path": "web/public/artworks/art-012.jpg",
+    "bytes": 46289
+  },
+  {
+    "path": "web/public/data/exhibition.json",
+    "bytes": 16551
+  },
+  {
+    "path": "web/public/fonts/DM-Sans-OFL.txt",
+    "bytes": 4482
+  },
+  {
+    "path": "web/public/fonts/dm-sans.ttf",
+    "bytes": 240164
+  },
+  {
+    "path": "web/public/fonts/instrument-serif-italic.ttf",
+    "bytes": 71592
+  },
+  {
+    "path": "web/public/fonts/Instrument-Serif-OFL.txt",
+    "bytes": 4405
+  },
+  {
+    "path": "web/public/fonts/instrument-serif.ttf",
+    "bytes": 70012
+  },
+  {
+    "path": "web/public/models/gallery.glb",
+    "bytes": 11265516
+  },
+  {
+    "path": "web/public/renders/01-sala-a.png",
+    "bytes": 932206
+  },
+  {
+    "path": "web/public/renders/02-sala-a.png",
+    "bytes": 926786
+  },
+  {
+    "path": "web/public/renders/03-pasillo.png",
+    "bytes": 798640
+  },
+  {
+    "path": "web/public/renders/04-sala-b.png",
+    "bytes": 798235
+  },
+  {
+    "path": "web/public/renders/05-sala-b.png",
+    "bytes": 877229
+  },
+  {
+    "path": "web/public/renders/06-detalle.png",
+    "bytes": 1147857
+  },
+  {
+    "path": "web/README.md",
+    "bytes": 5594
+  },
+  {
+    "path": "web/src/data.ts",
+    "bytes": 4384
+  },
+  {
+    "path": "web/src/exterior.ts",
+    "bytes": 5308
+  },
+  {
+    "path": "web/src/floor.ts",
+    "bytes": 2395
+  },
+  {
+    "path": "web/src/focus.ts",
+    "bytes": 4543
+  },
+  {
+    "path": "web/src/main.ts",
+    "bytes": 34162
+  },
+  {
+    "path": "web/src/navigation.ts",
+    "bytes": 3033
+  },
+  {
+    "path": "web/src/reflections.ts",
+    "bytes": 6524
+  },
+  {
+    "path": "web/src/style.css",
+    "bytes": 14396
+  },
+  {
+    "path": "web/tests/data.test.ts",
+    "bytes": 1862
+  },
+  {
+    "path": "web/tests/focus.test.ts",
+    "bytes": 5335
+  },
+  {
+    "path": "web/tests/navigation.test.ts",
+    "bytes": 2503
+  },
+  {
+    "path": "web/tests/reflections.test.ts",
+    "bytes": 1290
+  },
+  {
+    "path": "web/tsconfig.json",
+    "bytes": 284
+  },
+  {
+    "path": "web/vite.config.ts",
+    "bytes": 142
+  }
+]

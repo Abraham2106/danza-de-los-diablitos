@@ -1,0 +1,152 @@
+[
+  {
+    "id": "art-001",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1130
+    ],
+    "bytes": 849983,
+    "url": "https://www.artic.edu/iiif/2/2d484387-2509-5e8e-2c43-22f9981972eb/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-002",
+    "ok": true,
+    "dimensions": [
+      1686,
+      996
+    ],
+    "bytes": 505036,
+    "url": "https://www.artic.edu/iiif/2/a38e2828-ec6f-ece1-a30f-70243449197b/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-003",
+    "ok": true,
+    "dimensions": [
+      1154,
+      1686
+    ],
+    "bytes": 1511965,
+    "url": "https://www.artic.edu/iiif/2/77951d0c-d781-eac6-f4ff-f13cc5cfc0cf/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-004",
+    "ok": true,
+    "dimensions": [
+      1187,
+      1686
+    ],
+    "bytes": 1043927,
+    "url": "https://www.artic.edu/iiif/2/1c2d32a7-790c-501a-e124-00f28cf5052d/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-005",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1619
+    ],
+    "bytes": 1165558,
+    "url": "https://www.artic.edu/iiif/2/3c27b499-af56-f0d5-93b5-a7f2f1ad5813/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-006",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1531
+    ],
+    "bytes": 743751,
+    "url": "https://www.artic.edu/iiif/2/6f513908-03cc-b974-633b-adfce56b7936/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-007",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1320
+    ],
+    "bytes": 932823,
+    "url": "https://www.artic.edu/iiif/2/6644829f-f292-c5c4-a73c-0356a6fdbf0d/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-008",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1473
+    ],
+    "bytes": 605047,
+    "url": "https://www.artic.edu/iiif/2/defb4004-b500-218d-3d9b-9a02423f097d/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-009",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1309
+    ],
+    "bytes": 658998,
+    "url": "https://www.artic.edu/iiif/2/f8fd76e9-c396-5678-36ed-6a348c904d27/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-010",
+    "ok": true,
+    "dimensions": [
+      1272,
+      1686
+    ],
+    "bytes": 1390436,
+    "url": "https://www.artic.edu/iiif/2/b146368d-a855-63ac-6115-04b835c60bb0/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-011",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1246
+    ],
+    "bytes": 580191,
+    "url": "https://www.artic.edu/iiif/2/95be2572-b53d-8e7b-abc9-10eb48d4fa5d/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-012",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1351
+    ],
+    "bytes": 691601,
+    "url": "https://www.artic.edu/iiif/2/d4ca6321-8656-3d3f-a362-2ee297b2b813/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-013",
+    "ok": true,
+    "dimensions": [
+      1686,
+      1183
+    ],
+    "bytes": 833562,
+    "url": "https://www.artic.edu/iiif/2/b34de958-1cbe-065f-4941-c34f64d2b366/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-014",
+    "ok": true,
+    "dimensions": [
+      1323,
+      1686
+    ],
+    "bytes": 1689053,
+    "url": "https://www.artic.edu/iiif/2/47c5bcb8-62ef-e5d7-55e7-f5121f409a30/full/843,/0/default.jpg"
+  },
+  {
+    "id": "art-015",
+    "ok": true,
+    "dimensions": [
+      1344,
+      1686
+    ],
+    "bytes": 900407,
+    "url": "https://www.artic.edu/iiif/2/caac7478-b78f-a94d-a36c-fc5dde17e7c9/full/843,/0/default.jpg"
+  }
+]

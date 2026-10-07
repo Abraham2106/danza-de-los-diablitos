@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.vite/
+.vercel/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+
+# Editable offline source is retained locally; only runtime assets go to Vercel.
+gallery-source/web/
+gallery-source/artworks/
+gallery-source/assets/
+gallery-source/previews/
+gallery-source/renders/
+gallery-source/blender/baked-textures/
+*.blend
+*.blend[0-9]
+!gallery-source/blender/gallery.blend
+*.exr
+__pycache__/
+*.pyc

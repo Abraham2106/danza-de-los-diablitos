@@ -1,0 +1,56 @@
+[
+  {
+    "source": "01_sala_a_principal.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\01-sala-a.png"
+  },
+  {
+    "source": "02_sala_a_contravista.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\02-sala-a.png"
+  },
+  {
+    "source": "03_pasillo.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\03-pasillo.png"
+  },
+  {
+    "source": "04_sala_b_principal.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\04-sala-b.png"
+  },
+  {
+    "source": "05_sala_b_contravista.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\05-sala-b.png"
+  },
+  {
+    "source": "06_detalle_obra.png",
+    "kind": "final",
+    "sourceSize": [
+      3840,
+      2160
+    ],
+    "path": "web\\public\\renders\\06-detalle.png"
+  }
+]

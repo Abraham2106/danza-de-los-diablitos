@@ -1,0 +1,110 @@
+[
+  {
+    "id": "art-001",
+    "slot": "art-001",
+    "original": "artworks/boruca-originals/1-baile.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "El baile y la resistencia",
+    "description": "El toro y los diablitos se encuentran en las calles de Boruca. La celebración representa la resistencia del pueblo indígena frente a la conquista: el toro encarna a los conquistadores y los diablitos al pueblo Boruca. La crónica aportada relata la festividad del cierre de 2024 y el inicio de 2025."
+  },
+  {
+    "id": "art-002",
+    "slot": "art-002",
+    "original": "artworks/boruca-originals/2-diablito-mayor.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "El diablito mayor",
+    "description": "Una máscara de expresión marcada, plumas y tejidos acompaña al participante durante el recorrido. El diablito mayor es una figura de referencia en el baile. Esta fotografía abre una mirada a quienes mantienen viva la ceremonia y a la fuerza expresiva de sus máscaras."
+  },
+  {
+    "id": "art-003",
+    "slot": "art-003",
+    "original": "artworks/boruca-originals/3-mascaras.jpeg",
+    "width": 2.4,
+    "height": 1.5,
+    "title": "Animales en las máscaras",
+    "description": "Reptiles y felinos aparecen en las máscaras de este encuentro. La crónica destaca diseños de culebras, jaguares, aves y calaveras, junto con la búsqueda de creaciones cada vez más originales. Los colores y las formas hacen de cada máscara una pieza singular."
+  },
+  {
+    "id": "art-004",
+    "slot": "art-004",
+    "original": "artworks/boruca-originals/4-mascaras-mas-mascaras.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "El rostro entre las aves",
+    "description": "Un búho corona una máscara rodeada de plumas y otras figuras. Durante la celebración, las máscaras reúnen talla, pintura y creatividad. Una máscara que fue «jugada» es una pieza que participó en el baile y conserva la memoria de esa experiencia."
+  },
+  {
+    "id": "art-005",
+    "slot": "art-005",
+    "original": "artworks/boruca-originals/4-mascaras.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "Color, plumas y movimiento",
+    "description": "Las plumas rojas, las máscaras y la pintura corporal forman parte de la presencia visual de los participantes. A estos elementos se suman vestimentas de gangoche y hojas de plátano, descritas en la crónica. El baile convierte las piezas elaboradas por los artesanos en imágenes en movimiento."
+  },
+  {
+    "id": "art-006",
+    "slot": "art-006",
+    "original": "artworks/boruca-originals/5-diablitos.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "La fuerza del grupo",
+    "description": "Los participantes avanzan juntos, con máscaras, plumas y varas. La lucha ritual se desarrolla durante el recorrido por el pueblo: el toro y los diablitos se detienen en distintas casas y continúan sus enfrentamientos. La participación colectiva sostiene el ritmo de la celebración."
+  },
+  {
+    "id": "art-007",
+    "slot": "art-007",
+    "original": "artworks/boruca-originals/6-diablitos.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "Gestos del enfrentamiento",
+    "description": "Un participante señala hacia delante en medio del recorrido. Los diablitos provocan al toro y este responde con embestidas dentro de la representación ritual. Los gestos, la pintura corporal y las máscaras hacen visible la energía de la lucha narrada en el Baile de los Diablitos."
+  },
+  {
+    "id": "art-008",
+    "slot": "art-009",
+    "original": "artworks/boruca-originals/7-mascaras.jpeg",
+    "width": 1.4625000000000001,
+    "height": 1.9500000000000002,
+    "title": "La flauta y el jaguar",
+    "description": "El músico toca una flauta bajo una máscara con motivos de jaguar y un amplio conjunto de plumas. La música acompaña el baile y enlaza el movimiento de los participantes. Flautas, tambores, cuernos y caracoles forman parte del ambiente descrito en la crónica."
+  },
+  {
+    "id": "art-009",
+    "slot": "art-010",
+    "original": "artworks/boruca-originals/8-musica-diablitos.jpeg",
+    "width": 2.4,
+    "height": 1.5,
+    "title": "El pulso de la celebración",
+    "description": "Un tambor y varias flautas acompañan el recorrido. La música está presente durante los enfrentamientos y en el cierre de las fiestas. En las casas también se comparte chicha, una bebida de maíz fermentado que la crónica relaciona con la energía necesaria para sostener los días de celebración."
+  },
+  {
+    "id": "art-010",
+    "slot": "art-011",
+    "original": "artworks/boruca-originals/9-toro-daiblitos.jpeg",
+    "width": 2.4,
+    "height": 1.5,
+    "title": "El toro y los diablitos",
+    "description": "El toro, llamado Xaman en el texto aportado, es una estructura de madera cubierta con gangoche y una cara de toro. La crónica indica un peso aproximado de 40 kilos, por lo que varios participantes se turnan para llevarlo. Su encuentro con los diablitos representa la batalla entre conquista y resistencia."
+  },
+  {
+    "id": "art-011",
+    "slot": "art-014",
+    "original": "artworks/boruca-originals/5-conquistadores-derroatados.jpeg",
+    "width": 2.4,
+    "height": 1.7999999999999998,
+    "title": "La Tumbazón",
+    "description": "En el cierre de la representación, el toro derrota a los diablitos y estos caen: es el momento conocido como La Tumbazón. Después se levantan, buscan al toro y lo conducen hacia el cierre de la ceremonia. La escena enlaza la caída con la continuidad y la resistencia del pueblo Boruca."
+  },
+  {
+    "id": "art-012",
+    "slot": "art-015",
+    "original": "artworks/boruca-originals/10-fogata.jpeg",
+    "width": 2.4,
+    "height": 1.5,
+    "title": "El fuego del cierre",
+    "description": "La quema del toro cierra la celebración narrada en la crónica, entre música, gritos y el encuentro de participantes y visitantes. El fuego marca el final de la representación y la fuerza de una tradición que continúa viva. La fotografía recoge ese ambiente nocturno sin recortar su marca de autor."
+  }
+]

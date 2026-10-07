@@ -1,0 +1,8 @@
+.git/
+node_modules/
+dist/
+gallery-source/
+tests/
+docs/
+coverage/
+*.log

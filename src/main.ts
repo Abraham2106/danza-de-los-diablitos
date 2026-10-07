@@ -9,6 +9,8 @@ import { assetUrl, parseExhibition, type Artwork, type Exhibition } from './data
 import { canStand, clearPath, moveSafely, safeObservation, type Point } from './navigation';
 import {FocusSession,framingDistance,focusViewOffset,selectArtworkView,hasArtworkSight,type CameraPose} from './focus';
 import {FramePump,StaticRayIndex} from './performance';
+import {joinDoorwayWalls} from './architecture';
+import {addArtworkLabels} from './labels';
 
 const icons = {
   arrow:'<path d="M4 9h10M10 5l4 4-4 4"/>', close:'<path d="m5 5 8 8M13 5l-8 8"/>',
@@ -247,6 +249,9 @@ async function initialize(): Promise<void> {
         for(const material of materials)if(material instanceof THREE.MeshStandardMaterial)material.envMapIntensity=.55;
       }
     });
+    joinDoorwayWalls(model,exhibition.navigation);
+    await addArtworkLabels(model,exhibition.artworks,Math.min(8,renderer!.capabilities.getMaxAnisotropy()));
+    modelHits=[];model.traverse(object=>{if(object instanceof THREE.Mesh&&object.visible)modelHits.push(object);});
     finishExterior(model,renderer!,daylight);
     finishFloor(model,scene,renderer!);
     reflections=addPlanarReflections(model,scene,exhibition.navigation);

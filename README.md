@@ -39,6 +39,8 @@ Documentación oficial: [Vite en Vercel](https://vercel.com/docs/frameworks/fron
 
 La visita utiliza calidad alta por defecto y renderizado a demanda para evitar trabajo en reposo. El [informe de rendimiento](docs/RENDIMIENTO.md) documenta las mediciones, las comprobaciones y la corrección de las esquinas negras durante el movimiento.
 
+Las cartelas físicas tienen texto más grande, crédito completo y selección directa. La [actualización de cartelas y entradas](docs/CARTELAS-Y-UNIONES.md) muestra las capturas y explica cómo se elimina la superposición del muro del pasillo.
+
 - `src/`: aplicación y navegación.
 - `public/models/`: geometría exportada de Blender y materiales.
 - `public/data/exhibition.json`: títulos, descripciones, créditos y posiciones de enfoque.

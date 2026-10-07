@@ -1,5 +1,7 @@
 # Rendimiento y corrección de esquinas
 
+Actualización posterior: la franja de la entrada de Sala A requería además eliminar dos caras superpuestas dentro del mismo módulo. La corrección geométrica y las cartelas más legibles se documentan en [Cartelas y uniones](CARTELAS-Y-UNIONES.md). Las cifras de rendimiento siguientes corresponden a la optimización anterior; no se han vuelto a medir para esta actualización.
+
 Validación local del 7 de octubre de 2026. Comparación entre la compilación anterior de `main` (`b472ed3`) y esta optimización, en el mismo navegador y equipo, con calidad alta, viewport de 1440 × 901 y densidad de píxeles aproximadamente 1. La pestaña se mantuvo visible y enfocada; las primeras mediciones de una pestaña limitada por el navegador a 1 FPS se descartaron.
 
 | Prueba | Antes | Después |

@@ -1,7 +1,7 @@
 import type {Point} from './navigation';
 import {canStand} from './navigation';
 import type {Artwork,Navigation,Vec3} from './data';
-import {Mesh,Raycaster,Vector3,type Object3D,type Intersection} from 'three';
+import {Mesh,Raycaster,Vector3,type Object3D,type Intersection,type PerspectiveCamera} from 'three';
 export interface CameraPose {point:Point;yaw:number;pitch:number;}
 const copyPose=(pose:CameraPose):CameraPose=>({point:{...pose.point},yaw:pose.yaw,pitch:pose.pitch});
 
@@ -18,6 +18,7 @@ export class FocusSession {
     return {pose,token:++this.sequence};
   }
   isCurrent(token:number):boolean{return token===this.sequence;}
+  invalidate():void{this.sequence++;}
 }
 
 /** Perspective fit uses the complete viewport height and the usable panel-free region. */
@@ -74,4 +75,25 @@ export function hasArtworkSight(artwork:Pick<Artwork,'id'|'position'|'rotation'|
     }
   }
   return true;
+}
+
+/** Narration needs a visible portion of the real painting within eight metres. */
+export function isArtworkObservable(artwork:Pick<Artwork,'id'|'position'|'rotation'|'width'|'height'>,
+  camera:PerspectiveCamera,identify:(object:Object3D)=>string|undefined,intersect:(ray:Raycaster)=>Intersection[],range=8):boolean{
+  const center=new Vector3(...artwork.position),origin=camera.position;
+  if(origin.distanceTo(center)>range||new Vector3(Math.sin(artwork.rotation),0,Math.cos(artwork.rotation)).dot(origin.clone().sub(center))<=0)return false;
+  const ray=new Raycaster();
+  return artworkProbes(artwork).some(probe=>{
+    const target=new Vector3(...probe),screen=target.clone().project(camera);
+    if(Math.abs(screen.x)>1||Math.abs(screen.y)>1||screen.z< -1||screen.z>1)return false;
+    const length=origin.distanceTo(target);ray.set(origin,target.clone().sub(origin).normalize());ray.near=.01;ray.far=length+.08;
+    for(const hit of intersect(ray)){
+      let visible=true;for(let owner:Object3D|null=hit.object;owner;owner=owner.parent)if(!owner.visible){visible=false;break;}
+      if(!visible||!(hit.object instanceof Mesh))continue;
+      const material=Array.isArray(hit.object.material)?hit.object.material[hit.face?.materialIndex??0]:hit.object.material;
+      if(!material||material.visible===false||material.opacity<.25)continue;
+      return identify(hit.object)===artwork.id||hit.distance>=length-.025;
+    }
+    return true;
+  });
 }

@@ -7,11 +7,12 @@ import {finishFloor} from './floor';
 import {addPlanarReflections,type ReflectionController} from './reflections';
 import { assetUrl, parseExhibition, type Artwork, type Exhibition } from './data';
 import { canStand, clearPath, moveSafely, safeObservation, type Point } from './navigation';
-import {FocusSession,framingDistance,focusViewOffset,selectArtworkView,hasArtworkSight,type CameraPose} from './focus';
+import {FocusSession,framingDistance,focusViewOffset,selectArtworkView,hasArtworkSight,isArtworkObservable,type CameraPose} from './focus';
 import {FramePump,StaticRayIndex} from './performance';
 import {joinDoorwayWalls} from './architecture';
 import {addArtworkLabels} from './labels';
 import {replaceFurnishings} from './furnishings';
+import {GuidedTour,RecordedNarration,type NarrationState} from './visit';
 
 const icons = {
   arrow:'<path d="M4 9h10M10 5l4 4-4 4"/>', close:'<path d="m5 5 8 8M13 5l-8 8"/>',
@@ -32,6 +33,7 @@ app.innerHTML = `
     <nav class="toolbar" aria-label="Visita">
       <button class="text-button" id="catalog-button">${svg('grid')}<span>Fotografías</span></button>
       <button class="text-button" id="views-button">${svg('image')}<span>Vistas</span></button>
+      <button class="text-button" id="tour-button" aria-label="Iniciar o pausar el recorrido guiado" aria-pressed="false">${svg('walk')}<span>Recorrido guiado</span></button>
       <span class="toolbar-divider" aria-hidden="true"></span>
       <label class="quality-label" for="quality">Calidad</label>
       <select class="quality" id="quality" aria-label="Calidad de la visita"><option value="high">Alta</option><option value="low">Reducida (manual)</option></select>
@@ -50,7 +52,7 @@ app.innerHTML = `
         <button class="text-button" id="welcome-catalog">Ver fotografías</button>
       </div>
       <div class="progress-section"><div class="progress-track" aria-hidden="true"><i id="load-progress"></i></div><p id="load-status" role="status" aria-live="polite">Preparando la exposición…</p><button id="retry-load" class="text-button" hidden>Volver a cargar</button></div>
-      <p class="welcome-footnote">Recorre las salas desde tu computadora.<br/>Camina con WASD o las flechas. Arrastra para mirar.<br/><button class="text-button" id="welcome-views">Explorar las seis vistas ${svg('arrow')}</button></p>
+      <p class="welcome-footnote">Recorre las salas a tu ritmo.<br/>Usa WASD, las flechas o los controles táctiles. Arrastra para mirar.<br/><button class="text-button" id="welcome-views">Explorar las seis vistas ${svg('arrow')}</button></p>
     </div>
     <div class="welcome-visual">
       <div class="visual-placeholder">${brandMark}</div>
@@ -59,15 +61,17 @@ app.innerHTML = `
     </div>
   </main>
   <div class="hud" id="hud" hidden>
+    <section class="tour-card" id="tour-panel" aria-label="Recorrido guiado" hidden><p id="tour-status" role="status" aria-live="polite"></p><div><button class="text-button" id="tour-previous">Anterior</button><button class="button primary" id="tour-toggle">Pausar</button><button class="text-button" id="tour-next">Siguiente</button><button class="text-button" id="tour-stop">Volver a caminar</button></div></section>
     <div class="map-card"><div class="map-heading"><strong id="room-label">Sala A</strong><span>Tu recorrido</span></div><canvas id="minimap" aria-label="Mapa de la galería y posición del visitante"></canvas><p class="map-caption"><i></i>Estás aquí</p></div>
     <div class="walk-hint"><span><kbd>W A S D</kbd>Caminar</span><span>Arrastrar · Mirar</span><button class="text-button" id="hint-help">Controles ${svg('help')}</button></div>
+    <div class="touch-controls" id="touch-controls" role="group" aria-label="Moverse por la galería"><button data-move="KeyQ" aria-label="Girar a la izquierda">↶</button><button data-move="KeyW" aria-label="Caminar hacia delante">↑</button><button data-move="KeyE" aria-label="Girar a la derecha">↷</button><button data-move="KeyA" aria-label="Caminar a la izquierda">←</button><button data-move="KeyS" aria-label="Caminar hacia atrás">↓</button><button data-move="KeyD" aria-label="Caminar a la derecha">→</button></div>
     <div class="crosshair" aria-hidden="true"></div>
     <p id="hover-hint" hidden></p><p id="toast" role="status" aria-live="polite" hidden></p>
   </div>
   <div class="fade" id="fade" aria-hidden="true"></div>
-  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-header"><h2 id="help-title">A tu propio ritmo</h2><button class="icon-button" data-close aria-label="Cerrar instrucciones">${svg('close')}</button></div><div class="dialog-body"><p>Explora las dos salas y el pasillo. Selecciona una obra para conocer su historia o verla de cerca.</p><dl class="controls-list"><div><dt>WASD o flechas</dt><dd>Caminar por la galería.</dd></div><div><dt>Arrastrar el ratón</dt><dd>Mirar alrededor.</dd></div><div><dt>Q / E</dt><dd>Girar a izquierda o derecha.</dd></div><div><dt>Shift</dt><dd>Caminar más rápido.</dd></div><div><dt>Clic en una obra</dt><dd>Acercar y encuadrar la obra junto a su descripción. Al cerrar, vuelves a tu vista anterior.</dd></div><div><dt>Escape</dt><dd>Cerrar una ficha o ventana.</dd></div></dl><p style="margin-top:24px;margin-bottom:0">También puedes recorrer todas las obras desde el catálogo, sin moverte por las salas.</p></div><div class="dialog-footer"><button class="button primary" data-close>Continuar la visita ${svg('arrow')}</button></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-header"><h2 id="help-title">A tu propio ritmo</h2><button class="icon-button" data-close aria-label="Cerrar instrucciones">${svg('close')}</button></div><div class="dialog-body"><p>Explora las dos salas y el pasillo. Selecciona una obra para conocer su historia o verla de cerca.</p><dl class="controls-list"><div><dt>WASD o flechas</dt><dd>Caminar por la galería.</dd></div><div><dt>Arrastrar el ratón</dt><dd>Mirar alrededor.</dd></div><div><dt>Q / E</dt><dd>Girar a izquierda o derecha.</dd></div><div><dt>Shift</dt><dd>Caminar más rápido.</dd></div><div><dt>Clic en una obra</dt><dd>Acercar y encuadrar la obra junto a su descripción. Al cerrar, recuperas el control manual inmediatamente.</dd></div><div><dt>Escape</dt><dd>Detener el audio, salir de la ficha y volver a caminar.</dd></div></dl><p style="margin-top:24px;margin-bottom:0">Puedes explorar libremente, elegir una fotografía del catálogo o iniciar el recorrido guiado. Pausar detiene la cámara; continuar requiere tu decisión. Mientras escuchas, puedes caminar con la ficha abierta.</p></div><div class="dialog-footer"><button class="button primary" data-close>Continuar la visita ${svg('arrow')}</button></div></dialog>
   <dialog class="catalog-dialog" id="catalog-dialog" aria-labelledby="catalog-title"><div class="dialog-header"><div><p class="eyebrow">La colección</p><h2 id="catalog-title">Las obras</h2></div><button class="icon-button" data-close aria-label="Cerrar catálogo">${svg('close')}</button></div><div class="dialog-body"><p class="catalog-description" id="catalog-description">Selecciona una obra para descubrir su historia.</p><div class="catalog-grid" id="catalog-grid"></div></div></dialog>
-  <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-header"><p id="detail-index"></p><button class="icon-button" data-close aria-label="Cerrar ficha">${svg('close')}</button></div><div class="dialog-body" id="detail-content"></div></dialog>
+  <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-header"><p id="detail-index"></p><button class="icon-button" data-close aria-label="Cerrar ficha y volver a caminar">${svg('close')}</button></div><div class="detail-exit"><button class="button primary" id="return-walk">${svg('walk')}Volver a caminar</button></div><div class="dialog-body" id="detail-content"></div></dialog>
   <dialog class="image-dialog" id="image-dialog" aria-labelledby="image-title"><div class="dialog-header"><h2 id="image-title">La obra en detalle</h2><button class="icon-button" data-close aria-label="Cerrar imagen">${svg('close')}</button></div><div class="dialog-body" id="image-content"></div></dialog>
   <dialog class="views-dialog" id="views-dialog" aria-labelledby="views-title"><div class="dialog-header"><div><p class="eyebrow">La arquitectura</p><h2 id="views-title">Seis miradas a la galería</h2></div><button class="icon-button" data-close aria-label="Cerrar vistas">${svg('close')}</button></div><div class="dialog-body"><p class="views-note">Vistas de la galería para explorar su espacio y sus detalles.</p><div class="views-grid" id="views-grid"></div></div></dialog>
 `;
@@ -99,10 +103,22 @@ let renderUntil=0,frameDirty=true,mapDirty=true;
 const frames=new FramePump(loop);
 function invalidate():void{frameDirty=true;renderUntil=performance.now()+80;frames.request();}
 const keys = new Set<string>();
+const touchKeys=new Map<number,string>();
+const movementCodes=['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyQ','KeyE','ShiftLeft','ShiftRight'];
+const held=(code:string)=>keys.has(code)||[...touchKeys.values()].includes(code);
 let dragging: {x:number;y:number;startX:number;startY:number;moved:number} | null = null;
 let hoverArtwork: Artwork | undefined;
 const viewNames = ['Sala A · Vista principal','Sala A · Contravista','El pasillo entre salas','Sala B · Vista principal','Sala B · Contravista','Obra y arquitectura · Detalle'];
 let toastTimer = 0;
+let tourVisible=false,inspectionManual=false,inspectionAligned=false,inspectionSuspended=false;
+const tour=new GuidedTour(()=>{
+  if(!tour.running||!detailDialog.open||uiBlocked()||document.hidden)return;
+  if(tour.index>=exhibition.artworks.length-1){pauseTour();toast('Terminaste el recorrido. Puedes seguir explorando libremente.');return;}
+  showArtwork(exhibition.artworks[tour.index+1]);
+});
+const narration=new RecordedNarration(updateAudioControls,()=>{tour.release(true);updateTourControls();},()=>{
+  tour.release();pauseTour();toast('No se pudo reproducir la narración. Puedes volver a intentarlo.');
+});
 
 function textNode(tag: string, text: string, className = ''): HTMLElement {
   const node = document.createElement(tag); node.textContent = text; node.className = className; return node;
@@ -129,29 +145,109 @@ function imageElement(path: string, alt: string, loading: 'lazy'|'eager'='lazy')
 
 const dialogs = Array.from(document.querySelectorAll<HTMLDialogElement>('dialog'));
 const triggers = new WeakMap<HTMLDialogElement,HTMLElement>();
-function stopAudio(): void { if ('speechSynthesis' in window) speechSynthesis.cancel();const audio=$<HTMLButtonElement>('#audio-button');if(audio){audio.innerHTML=`${svg('audio')} Escuchar la descripción`;audio.setAttribute('aria-pressed','false');} }
+function updateAudioControls(state:NarrationState):void{
+  const button=document.querySelector<HTMLButtonElement>('#audio-button');
+  if(button){button.innerHTML=`${svg('audio')}${state==='idle'?'Escuchar narración':'Detener'}`;button.setAttribute('aria-pressed',String(state!=='idle'));}
+  const status=document.querySelector('#audio-status');
+  if(status)status.textContent=state==='loading'?'Cargando narración…':state==='playing'?'Narración en reproducción. Puedes caminar mientras escuchas.':'Audio grabado proporcionado para esta fotografía. El texto de la ficha es una guía de observación, no una transcripción.';
+  updateTourControls();
+}
+function stopAudio():void{narration.stop();tour.release();}
+function clearInputs():void{
+  keys.clear();touchKeys.clear();dragging=null;pendingHover=undefined;canvas.classList.remove('grabbing');
+  document.querySelectorAll('[data-move]').forEach(button=>button.setAttribute('aria-pressed','false'));
+}
+function cancelApproach():void{
+  focusSession.invalidate();transition=undefined;moving=false;$('#fade').classList.remove('active');
+  clearInputs();previousTime=0;accumulator=0;invalidate();
+}
+function updateTourControls():void{
+  const panel=$('#tour-panel');panel.hidden=!tourVisible;
+  if(!exhibition)return;
+  const status=!tour.running?'En pausa':moving?'Acercándose':narration.busy?'Escuchando narración':'Contemplando';
+  $('#tour-status').textContent=`${status} · Parada ${tour.index+1} de ${exhibition.artworks.length}`;
+  $('#tour-toggle').textContent=tour.running?'Pausar':'Continuar';
+  $<HTMLButtonElement>('#tour-previous').disabled=tour.index===0;
+  $<HTMLButtonElement>('#tour-next').disabled=tour.index===exhibition.artworks.length-1;
+  $('#tour-button').setAttribute('aria-pressed',String(tour.running));
+}
+function pauseTour():void{tour.pause();inspectionSuspended=true;cancelApproach();updateTourControls();}
+function manualControl():void{
+  pauseTour();inspectionManual=true;updateFocusProjection();
+  // This deliberately does not stop the recording or close the inspection.
+}
+function exitInspection():void{
+  tour.stop();tourVisible=false;stopAudio();cancelApproach();
+  const restore=focusSession.restore();
+  // Preserve the original view for a stationary inspection, immediately. Once
+  // the visitor walks with the card open, keep their freely chosen position.
+  if(restore&&!inspectionManual){const safe=canStand(restore.pose.point,exhibition.navigation)?restore.pose.point:safeObservation(restore.pose.point,exhibition.navigation);if(safe)applyPose({...restore.pose,point:safe});}
+  currentArtwork=undefined;inspectionAligned=false;inspectionManual=false;inspectionSuspended=false;
+  if(detailDialog.open)detailDialog.close();updateFocusProjection();updateTourControls();
+  if(visiting&&!uiBlocked())canvas.focus();
+}
 function openDialog(dialog: HTMLDialogElement, modal = true): void {
-  keys.clear();dragging=null;canvas.classList.remove('grabbing');
+  if(dialog!==detailDialog){pauseTour();stopAudio();}
+  else clearInputs();
   triggers.set(dialog,document.activeElement as HTMLElement);
   if(modal) dialog.setAttribute('closedby','any');else dialog.removeAttribute('closedby');
   if (!dialog.open) modal ? dialog.showModal() : dialog.show();
   dialog.querySelector<HTMLButtonElement>('[data-close]')?.focus();
 }
 for (const dialog of dialogs) {
-  dialog.querySelectorAll<HTMLButtonElement>('[data-close]').forEach(button=>button.addEventListener('click',()=>dialog.close()));
-  dialog.addEventListener('close',()=>{if(dialog.open)return;if(dialog===detailDialog){stopAudio();void returnToVisit();}keys.clear();const previous=triggers.get(dialog);if(previous?.isConnected && !previous.closest('[hidden]') && !previous.closest('dialog:not([open])'))previous.focus();else if(visiting&&!uiBlocked())canvas.focus();});
+  dialog.querySelectorAll<HTMLButtonElement>('[data-close]').forEach(button=>button.addEventListener('click',()=>dialog===detailDialog?exitInspection():dialog.close()));
+  dialog.addEventListener('cancel',event=>{if(dialog===detailDialog){event.preventDefault();exitInspection();}});
+  dialog.addEventListener('close',()=>{if(dialog.open)return;if(dialog===detailDialog&&currentArtwork)exitInspection();clearInputs();const previous=triggers.get(dialog);if(previous?.isConnected && !previous.closest('[hidden]') && !previous.closest('dialog:not([open])'))previous.focus();else if(visiting&&!uiBlocked())canvas.focus();});
   if(!('closedBy' in HTMLDialogElement.prototype)) dialog.addEventListener('click',event=>{if(event.target===dialog){const bounds=dialog.getBoundingClientRect();if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)dialog.close();}});
 }
-const uiBlocked=()=>dialogs.some(dialog=>dialog.open);
+const uiBlocked=()=>dialogs.some(dialog=>dialog.open&&dialog.matches(':modal'));
 document.addEventListener('keydown',event=>{
-  if (event.key==='Escape' && detailDialog.open && !dialogs.some(d=>d!==detailDialog&&d.matches(':modal'))) {event.preventDefault();detailDialog.close();}
-  if (!visiting||uiBlocked()||moving) return;
+  if(event.key==='Escape'){
+    // Escape stops narration even when an image/help modal is above the card.
+    stopAudio();pauseTour();
+    if(detailDialog.open){event.preventDefault();dialogs.filter(d=>d!==detailDialog&&d.open).forEach(d=>d.close());exitInspection();}return;
+  }
+  if (!visiting||uiBlocked()||document.hidden) return;
+  if((event.target as HTMLElement).closest('input,select,textarea,[contenteditable=true]'))return;
   const code=event.code;
-  if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyQ','KeyE','ShiftLeft','ShiftRight'].includes(code)) {event.preventDefault();keys.add(code);frames.request();}
+  if (movementCodes.includes(code)) {event.preventDefault();if(!keys.has(code)){if(moving||tour.running||!inspectionManual)manualControl();keys.add(code);}frames.request();}
 });
 document.addEventListener('keyup',event=>keys.delete(event.code));
-window.addEventListener('blur',()=>{keys.clear();dragging=null;});
-document.addEventListener('visibilitychange',()=>{keys.clear();dragging=null;if(!document.hidden&&visiting)invalidate();});
+function suspendVisit():void{pauseTour();stopAudio();}
+window.addEventListener('blur',suspendVisit);
+window.addEventListener('pagehide',suspendVisit);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendVisit();else if(visiting)invalidate();});
+new MutationObserver(()=>{stopAudio();pauseTour();updateAudioAvailability();}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+$('#return-walk').addEventListener('click',exitInspection);
+$('#tour-button').addEventListener('click',()=>{
+  if(!visiting||!geometryLoaded||uiBlocked())return;
+  if(tour.running){pauseTour();return;}
+  tourVisible=true;tour.start();
+  if(currentArtwork&&detailDialog.open&&inspectionAligned&&!inspectionManual){inspectionSuspended=false;tour.arrive();}
+  else showArtwork(currentArtwork??exhibition.artworks[tour.index]);
+  updateTourControls();
+});
+$('#tour-toggle').addEventListener('click',()=>$('#tour-button').click());
+$('#tour-stop').addEventListener('click',exitInspection);
+$('#tour-previous').addEventListener('click',()=>showArtwork(exhibition.artworks[Math.max(0,tour.index-1)]));
+$('#tour-next').addEventListener('click',()=>showArtwork(exhibition.artworks[Math.min(exhibition.artworks.length-1,tour.index+1)]));
+for(const button of document.querySelectorAll<HTMLButtonElement>('[data-move]')){
+  button.setAttribute('aria-pressed','false');
+  button.addEventListener('pointerdown',event=>{
+    if(!visiting||uiBlocked())return;event.preventDefault();
+    const others=new Map(touchKeys);manualControl();others.forEach((code,id)=>touchKeys.set(id,code));
+    touchKeys.set(event.pointerId,button.dataset.move!);button.setAttribute('aria-pressed','true');button.setPointerCapture(event.pointerId);frames.request();
+  });
+  const release=(event:PointerEvent)=>{touchKeys.delete(event.pointerId);button.setAttribute('aria-pressed','false');};
+  button.addEventListener('pointerup',release);button.addEventListener('pointercancel',release);button.addEventListener('lostpointercapture',release);
+  button.addEventListener('click',event=>{
+    if(event.detail!==0||!visiting||uiBlocked())return;manualControl();
+    const code=button.dataset.move!;
+    if(code==='KeyQ'||code==='KeyE')yaw+=(code==='KeyQ'?1:-1)*.15;
+    else{const forward=code==='KeyW'?1:code==='KeyS'?-1:0,side=code==='KeyD'?1:code==='KeyA'?-1:0;point=moveSafely(point,(-Math.sin(yaw)*forward+Math.cos(yaw)*side)*.25,(-Math.cos(yaw)*forward-Math.sin(yaw)*side)*.25,exhibition.navigation);}
+    setCamera();
+  });
+}
 $('#help-button').addEventListener('click',()=>openDialog($<HTMLDialogElement>('#help-dialog')));
 $('#hint-help').addEventListener('click',()=>openDialog($<HTMLDialogElement>('#help-dialog')));
 for (const id of ['#catalog-button','#welcome-catalog']) $(id).addEventListener('click',()=>openDialog(catalogDialog));
@@ -159,28 +255,52 @@ for (const id of ['#views-button','#welcome-views']) $(id).addEventListener('cli
 $('#retry-load').addEventListener('click',()=>location.reload());
 
 function showArtwork(artwork: Artwork): void {
-  currentArtwork=artwork;stopAudio();
+  if(inspectionManual)focusSession.restore();
+  cancelApproach();stopAudio();currentArtwork=artwork;inspectionManual=false;inspectionAligned=false;inspectionSuspended=false;
+  tour.select(exhibition.artworks.indexOf(artwork));
   $('#detail-index').textContent=`FOTOGRAFÍA ${String(exhibition.artworks.indexOf(artwork)+1).padStart(2,'0')} / ${exhibition.artworks.length}`;
   const content=$('#detail-content');content.replaceChildren();
   content.append(imageElement(artwork.image,`${artwork.title}, de ${artwork.artist}`,'eager'),textNode('h2',artwork.title),textNode('p',artwork.artist,'detail-artist'),textNode('p',artwork.year,'detail-year'),textNode('p',artwork.description,'detail-description'));
   content.querySelector('h2')!.id='detail-title';
+  if(artwork.guide){
+    const guide=document.createElement('section');guide.className='detail-guide';guide.setAttribute('aria-label','Guía de observación');
+    guide.append(textNode('h3','Una historia para recorrer'),textNode('p',artwork.guide.context),textNode('h3','Mira de cerca'),textNode('p',artwork.guide.observe),textNode('p',artwork.guide.next,'guide-next'));content.append(guide);
+  }
   const source=textNode('p',`Procedencia: ${artwork.source}.`,'detail-source');content.append(source);
   const actions=document.createElement('div');actions.className='detail-actions';
   const closeView=document.createElement('button');closeView.className='button';closeView.innerHTML=`${svg('expand')}Ampliar`;closeView.addEventListener('click',()=>showLargeImage(artwork.image,artwork.title,artwork.artist));actions.append(closeView);
-  const returnButton=document.createElement('button');returnButton.className='button primary';returnButton.innerHTML=`${svg('walk')}Volver al recorrido`;returnButton.hidden=!geometryLoaded||!visiting;returnButton.addEventListener('click',()=>detailDialog.close());actions.append(returnButton);content.append(actions);
-  if ('speechSynthesis' in window) {
-    const audio=document.createElement('button');audio.className='button detail-audio';audio.id='audio-button';audio.setAttribute('aria-pressed','false');audio.innerHTML=`${svg('audio')}Escuchar la descripción`;
-    audio.addEventListener('click',()=>{
-      if (speechSynthesis.speaking) {stopAudio();return;}
-      const utterance=new SpeechSynthesisUtterance(`${artwork.title}. ${artwork.artist}. ${artwork.year}. ${artwork.description}`);utterance.lang='es';utterance.rate=.93;
-      const voice=speechSynthesis.getVoices().find(v=>v.lang.startsWith('es'));if(voice)utterance.voice=voice;
-      utterance.onend=stopAudio;utterance.onerror=()=>{stopAudio();toast('La lectura no está disponible. Puedes leer la descripción en la ficha.');};
-      audio.setAttribute('aria-pressed','true');audio.innerHTML=`${svg('audio')}Detener lectura`;speechSynthesis.speak(utterance);
-    });content.append(audio);
+  if(visiting){
+    const manual=document.createElement('button');manual.className='button';manual.id='manual-inspection';manual.innerHTML=`${svg('walk')}Caminar con la ficha abierta`;manual.addEventListener('click',()=>{manualControl();canvas.focus();});actions.append(manual);
   }
+  content.append(actions);
+  if(artwork.narration){
+    const audio=document.createElement('button');audio.className='button detail-audio';audio.id='audio-button';audio.setAttribute('aria-pressed','false');audio.innerHTML=`${svg('audio')}Escuchar narración`;
+    audio.addEventListener('click',()=>{
+      if(narration.busy){stopAudio();return;}
+      if(currentArtwork!==artwork||!detailDialog.open||!audioForCurrentLanguage())return;
+      if(visiting&&!moving&&(inspectionAligned||inspectionManual)&&!observableArtwork()){toast('Acércate y mira la fotografía para escuchar su narración.');return;}
+      tour.hold();void narration.play(assetUrl(artwork.narration!.src));
+    });
+    const status=textNode('p','Audio grabado proporcionado para esta fotografía. El texto de la ficha es una guía de observación, no una transcripción.','audio-status');status.id='audio-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');audio.setAttribute('aria-describedby',status.id);
+    // Put the recording before the lengthy description, without changing art.
+    content.querySelector('.detail-year')!.after(audio,status);
+    updateAudioAvailability();
+  }else{content.querySelector('.detail-year')!.after(textNode('p','Esta parada no tiene audio grabado. Puedes seguir la guía de observación.','audio-status'));}
   if(visiting&&geometryLoaded){
     catalogDialog.close();detailDialog.dataset.mode='visit';openDialog(detailDialog,false);void focusArtwork(artwork);
   }else{detailDialog.dataset.mode='reading';openDialog(detailDialog,true);}
+  updateTourControls();
+}
+function audioForCurrentLanguage():boolean{
+  const lang=(document.documentElement.lang||'es').toLowerCase().split('-')[0];
+  return currentArtwork?.narration?.language.toLowerCase().split('-')[0]===lang;
+}
+function updateAudioAvailability():void{
+  const button=document.querySelector<HTMLButtonElement>('#audio-button');
+  if(button){button.disabled=!audioForCurrentLanguage();if(button.disabled)$('#audio-status').textContent='No hay una grabación proporcionada para el idioma actual.';else updateAudioControls(narration.state);}
+}
+function observableArtwork():boolean{
+  return !!currentArtwork&&isArtworkObservable(currentArtwork,camera,artworkId,ray=>rayIndex.intersect(ray));
 }
 function showLargeImage(path: string, title: string, artist=''): void {
   $('#image-title').textContent=artist?`${title} · ${artist}`:title;
@@ -220,8 +340,8 @@ function initRenderer(): void {
   const env=pmrem.fromScene(room,.04);scene.environment=env.texture;room.dispose();pmrem.dispose();
   scene.add(new THREE.HemisphereLight(0xffffff,0x758b96,1.2));
   daylight=new THREE.DirectionalLight(0xfff1df,2);daylight.position.set(-10,18,-14);scene.add(daylight);
-  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();keys.clear();geometryLoaded=false;visiting=false;canvas.hidden=true;$('#hud').hidden=true;$('.topbar').hidden=true;welcome.hidden=false;enterButton.disabled=true;$('#retry-load').hidden=false;setLoad('La visita se interrumpió. Vuelve a cargarla o explora las obras y las vistas.');});
-  window.addEventListener('resize',()=>{if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);reflections?.setReduced(loweredQuality);updateFocusProjection();if(focusSession.active&&currentArtwork)void focusArtwork(currentArtwork);drawMinimap();});
+  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();exitInspection();geometryLoaded=false;visiting=false;canvas.hidden=true;$('#hud').hidden=true;$('.topbar').hidden=true;welcome.hidden=false;enterButton.disabled=true;$('#retry-load').hidden=false;setLoad('La visita se interrumpió. Vuelve a cargarla o explora las obras y las vistas.');});
+  window.addEventListener('resize',()=>{if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);reflections?.setReduced(loweredQuality);updateFocusProjection();if(focusSession.active&&currentArtwork&&!inspectionManual&&!inspectionSuspended&&(moving||inspectionAligned))void focusArtwork(currentArtwork);drawMinimap();});
 }
 async function initialize(): Promise<void> {
   try {
@@ -299,7 +419,7 @@ function pickArtwork(x: number,y: number): Artwork|undefined {
     const id=artworkId(hit.object);return id?exhibition.artworks.find(a=>a.id===id):undefined;
   }
 }
-canvas.addEventListener('pointerdown',event=>{if(event.button!==0||uiBlocked()||moving)return;canvas.focus();dragging={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,moved:0};canvas.setPointerCapture(event.pointerId);canvas.classList.add('grabbing');});
+canvas.addEventListener('pointerdown',event=>{if(event.button!==0||uiBlocked()||!visiting)return;manualControl();canvas.focus();dragging={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,moved:0};canvas.setPointerCapture(event.pointerId);canvas.classList.add('grabbing');});
 canvas.addEventListener('pointermove',event=>{
   if(dragging){const dx=event.clientX-dragging.x,dy=event.clientY-dragging.y;dragging.moved+=Math.abs(dx)+Math.abs(dy);yaw-=dx*.0045;pitch=THREE.MathUtils.clamp(pitch-dy*.0035,-1.1,1.1);dragging.x=event.clientX;dragging.y=event.clientY;invalidate();}
   else if(!moving){pendingHover={x:event.clientX,y:event.clientY};frames.request();}
@@ -309,25 +429,28 @@ canvas.addEventListener('pointercancel',()=>{dragging=null;canvas.classList.remo
 canvas.addEventListener('pointerleave',()=>{pendingHover=undefined;if(!dragging){hoverArtwork=undefined;$('#hover-hint').hidden=true;canvas.classList.remove('art-hover');}});
 
 let transition:{token:number;start:number;duration:number;from:CameraPose;to:CameraPose}|undefined;
-let pendingRestorePose:CameraPose|undefined;
 const currentPose=():CameraPose=>({point:{...point},yaw,pitch});
 function applyPose(pose:CameraPose):void{point={...pose.point};yaw=pose.yaw;pitch=pose.pitch;setCamera();}
 function updateFocusProjection():void{
   if(!camera)return;
-  if(focusSession.active&&detailDialog.open&&detailDialog.dataset.mode==='visit'&&innerWidth>760){
-    const panel=detailDialog.getBoundingClientRect();camera.setViewOffset(innerWidth,innerHeight,focusViewOffset(innerWidth,panel.left),0,innerWidth,innerHeight);
+  if(focusSession.active&&!inspectionManual&&detailDialog.open&&detailDialog.dataset.mode==='visit'){
+    const panel=detailDialog.getBoundingClientRect();
+    camera.setViewOffset(innerWidth,innerHeight,innerWidth>760?focusViewOffset(innerWidth,panel.left):0,innerWidth<=760?(innerHeight-panel.top-150)/2:0,innerWidth,innerHeight);
   }else camera.clearViewOffset();
+  if(innerWidth<=760)document.body.classList.toggle('mobile-inspecting',detailDialog.open&&visiting);
+  else document.body.classList.remove('mobile-inspecting');
   invalidate();
 }
 function focusTarget(artwork:Artwork):Point|null{
   const panel=detailDialog.getBoundingClientRect();const availableWidth=innerWidth>760?panel.left-64:innerWidth-64;
-  const distance=framingDistance(artwork.width+.16,artwork.height+.16,camera.fov,innerHeight,availableWidth,innerHeight-200);
+  const availableHeight=innerWidth<=760?Math.max(180,panel.top-170):innerHeight-200;
+  const distance=framingDistance(artwork.width+.16,artwork.height+.16,camera.fov,innerHeight,availableWidth,availableHeight);
   return selectArtworkView(artwork,exhibition.navigation,distance,candidate=>hasArtworkSight(artwork,candidate,modelHits,artworkId,ray=>rayIndex.intersect(ray)));
 }
 async function moveCameraTo(target:CameraPose,token:number,forceFade=false):Promise<void>{
   transition=undefined;keys.clear();dragging=null;moving=true;$('#hover-hint').hidden=true;canvas.classList.remove('art-hover');
   pendingHover=undefined;hoverArtwork=undefined;
-  if(reducedMotion.matches){$('#fade').classList.remove('active');if(focusSession.isCurrent(token)){applyPose(target);updateFocusProjection();moving=false;}return;}
+  if(reducedMotion.matches){$('#fade').classList.remove('active');if(focusSession.isCurrent(token)){applyPose(target);updateFocusProjection();finishApproach(token);}return;}
   if(!forceFade&&clearPath(point,target.point,exhibition.navigation)&&!$('#fade').classList.contains('active')){
     const delta=Math.atan2(Math.sin(target.yaw-yaw),Math.cos(target.yaw-yaw));
     transition={token,start:performance.now(),duration:900,from:currentPose(),to:{...target,yaw:yaw+delta}};
@@ -335,26 +458,22 @@ async function moveCameraTo(target:CameraPose,token:number,forceFade=false):Prom
   }else{
     $('#fade').classList.add('active');await new Promise(resolve=>setTimeout(resolve,270));
     if(!focusSession.isCurrent(token))return;
-    applyPose(target);updateFocusProjection();$('#fade').classList.remove('active');moving=false;
+    applyPose(target);updateFocusProjection();$('#fade').classList.remove('active');finishApproach(token);
   }
 }
+function finishApproach(token:number):void{
+  if(!focusSession.isCurrent(token)||!detailDialog.open)return;
+  moving=false;inspectionAligned=true;tour.arrive();updateTourControls();
+}
 async function focusArtwork(artwork:Artwork):Promise<void>{
-  const token=focusSession.begin(pendingRestorePose??currentPose());pendingRestorePose=undefined;updateFocusProjection();
+  const token=focusSession.begin(currentPose());inspectionAligned=false;updateFocusProjection();
   const target=focusTarget(artwork);
   if(!target){
-    moving=false;transition=undefined;$('#fade').classList.remove('active');detailDialog.dataset.mode='reading';updateFocusProjection();
+    pauseTour();detailDialog.dataset.mode='visit';updateFocusProjection();
     const note=textNode('p','No hay una vista despejada desde el recorrido. Aquí puedes ver la obra en detalle.','focus-note');note.setAttribute('role','status');$('#detail-content').prepend(note);return;
   }
   const dx=artwork.position[0]-target.x,dz=artwork.position[2]-target.z;
   await moveCameraTo({point:target,yaw:Math.atan2(-dx,-dz),pitch:Math.atan2(artwork.position[1]-1.65,Math.hypot(dx,dz))},token);
-}
-async function returnToVisit():Promise<void>{
-  const restore=focusSession.restore();if(!restore)return;
-  pendingRestorePose=restore.pose;
-  const safe=canStand(restore.pose.point,exhibition.navigation)?restore.pose.point:safeObservation(restore.pose.point,exhibition.navigation);
-  if(!safe){transition=undefined;moving=false;$('#fade').classList.remove('active');camera.clearViewOffset();return;}
-  await moveCameraTo({...restore.pose,point:safe},restore.token,true);
-  if(focusSession.isCurrent(restore.token)){pendingRestorePose=undefined;if(visiting&&!uiBlocked())canvas.focus();}
 }
 
 const quality=$<HTMLSelectElement>('#quality');
@@ -388,21 +507,26 @@ function loop(time:number):boolean{
   {
     if(transition){
       if(!focusSession.isCurrent(transition.token)){transition=undefined;}
-      else{const t=Math.min(1,(time-transition.start)/transition.duration),e=t*t*(3-2*t);point={x:transition.from.point.x+(transition.to.point.x-transition.from.point.x)*e,z:transition.from.point.z+(transition.to.point.z-transition.from.point.z)*e};yaw=transition.from.yaw+(transition.to.yaw-transition.from.yaw)*e;pitch=transition.from.pitch+(transition.to.pitch-transition.from.pitch)*e;if(t===1){transition=undefined;moving=false;}}
+      else{const t=Math.min(1,(time-transition.start)/transition.duration),e=t*t*(3-2*t);point={x:transition.from.point.x+(transition.to.point.x-transition.from.point.x)*e,z:transition.from.point.z+(transition.to.point.z-transition.from.point.z)*e};yaw=transition.from.yaw+(transition.to.yaw-transition.from.yaw)*e;pitch=transition.from.pitch+(transition.to.pitch-transition.from.pitch)*e;if(t===1){const token=transition.token;transition=undefined;finishApproach(token);}}
     }
     accumulator+=Math.min(actualDelta,.15);const step=1/120;
     while(accumulator>=step){
       if(!uiBlocked()&&!moving){
-        const forward=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0);
-        const sideways=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0);
-        const turn=(keys.has('KeyQ')?1:0)-(keys.has('KeyE')?1:0);yaw+=turn*1.7*step;
-        const speed=keys.has('ShiftLeft')||keys.has('ShiftRight')?4.2:2.3;const length=Math.max(1,Math.hypot(forward,sideways));
+        const forward=(held('KeyW')||held('ArrowUp')?1:0)-(held('KeyS')||held('ArrowDown')?1:0);
+        const sideways=(held('KeyD')||held('ArrowRight')?1:0)-(held('KeyA')||held('ArrowLeft')?1:0);
+        const turn=(held('KeyQ')?1:0)-(held('KeyE')?1:0);yaw+=turn*1.7*step;
+        const speed=held('ShiftLeft')||held('ShiftRight')?4.2:2.3;const length=Math.max(1,Math.hypot(forward,sideways));
         const dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*sideways)/length*speed*step,dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*sideways)/length*speed*step;
         if(dx||dz)point=moveSafely(point,dx,dz,exhibition.navigation);
       }
       accumulator-=step;
     }
     setCamera();
+    // The initial camera move can begin far outside the work's visible range.
+    // Only check a recording after arrival or explicit manual takeover.
+    if(narration.busy&&currentArtwork&&detailDialog.open&&!moving&&(inspectionAligned||inspectionManual)&&!observableArtwork()){
+      stopAudio();pauseTour();toast('La narración se detuvo al salir del campo de observación. Puedes escucharla de nuevo con el botón.');
+    }
     if(pendingHover){
       const next=pickArtwork(pendingHover.x,pendingHover.y);pendingHover=undefined;
       if(next?.id!==hoverArtwork?.id){hoverArtwork=next;const hint=$('#hover-hint');hint.hidden=!next;canvas.classList.toggle('art-hover',!!next);if(next)hint.replaceChildren(textNode('strong',next.title),textNode('span','Clic para conocer la obra'));}
@@ -410,10 +534,9 @@ function loop(time:number):boolean{
     // Give throttled mirrors time to capture the final pose before going idle.
     if(frameDirty||time<renderUntil){renderer.render(scene,camera);if(mapDirty&&time-lastMap>100){drawMinimap();lastMap=time;}frameDirty=false;}
   }
-  const active=!!transition||(!uiBlocked()&&!moving&&keys.size>0)||time<renderUntil;
+  const active=!!transition||(!uiBlocked()&&!moving&&(keys.size>0||touchKeys.size>0))||time<renderUntil;
   if(!active){if(mapDirty)drawMinimap();previousTime=0;accumulator=0;}
   return active;
 }
 
 void initialize();
-

@@ -9,4 +9,10 @@ describe('Contrato de exposición',()=>{
   it('rechaza dimensiones o coordenadas inválidas',()=>{const data=fixture();data.artworks[0].width=0;expect(()=>parseExhibition(data)).toThrow();data.artworks[0].width=1;data.artworks[0].position[0]=Infinity;expect(()=>parseExhibition(data)).toThrow();});
   it('rechaza una navegación sin salas',()=>{const data=fixture();data.navigation.walkable=[];expect(()=>parseExhibition(data)).toThrow();});
   it('rechaza geometría orientada inválida',()=>{const data={...fixture(),navigation:{...fixture().navigation,orientedBoxes:[{x:0,z:0,width:1,depth:-1,rotation:0}]}};expect(()=>parseExhibition(data)).toThrow();});
+  it('solo acepta grabaciones locales y guía completa',()=>{
+    const data=fixture();const art={...data.artworks[0],narration:{src:'audio/diablo-mayor-es.mp3',language:'es'},guide:{context:'Contexto',observe:'Observa',next:'Seguimos'}};
+    expect(parseExhibition({...data,artworks:[art]}).artworks[0].narration?.src).toBe(art.narration.src);
+    expect(()=>parseExhibition({...data,artworks:[{...art,narration:{...art.narration,src:'https://other/audio.mp3'}}]})).toThrow();
+    expect(()=>parseExhibition({...data,artworks:[{...art,guide:{...art.guide,observe:''}}]})).toThrow();
+  });
 });

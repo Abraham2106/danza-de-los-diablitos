@@ -20,6 +20,7 @@ import {QUESTIONS,SECTIONS,SECTION_SIZE,QUESTION_TIME,READ_TIME,MAX_POINTS,isUnl
 import {ROOMS,roomOf,type RoomKey} from './rooms';
 import {api,type RawAnswer,type Podium} from './api';
 import {showPodium} from './podium';
+import {showTutorial} from './tutorial';
 import {mountHost} from './host';
 
 const icons = {
@@ -111,6 +112,7 @@ app.innerHTML = `
       <nav class="join-links" aria-label="Antes de entrar">
         <button class="text-button" id="welcome-guide" type="button">Guía de la fiesta</button>
         <button class="text-button" id="welcome-catalog" type="button">Ver las fotografías</button>
+        <button class="text-button" id="tutorial-open" type="button">Cómo se juega</button>
         <button class="text-button host-link" id="host-open" type="button">${svg('lock')}Host</button>
       </nav>
     </section>
@@ -124,7 +126,7 @@ app.innerHTML = `
     <p id="hover-hint" hidden></p><p id="toast" role="status" aria-live="polite" hidden></p>
   </div>
   <div class="fade" id="fade" aria-hidden="true"></div>
-  <dialog id="help-dialog" aria-labelledby="help-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Antes de caminar</p><h2 id="help-title">Cómo recorrer</h2></div><button class="icon-button" data-close aria-label="Cerrar instrucciones">${svg('close')}</button></div><div class="dialog-body"><p class="help-lede">La exposición tiene dos salas unidas por un pasillo. En la Sala I están los diablitos; en el pasillo, la música; en la Sala II, el toro y el fuego.</p><dl class="controls-list"><div><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Caminar. También funcionan las flechas.</dd></div><div><dt><kbd class="wide">Arrastrar</kbd></dt><dd>Mirar alrededor con el ratón.</dd></div><div><dt><kbd>Q</kbd><kbd>E</kbd></dt><dd>Girar a la izquierda o a la derecha.</dd></div><div><dt><kbd class="wide">Shift</kbd></dt><dd>Caminar más rápido.</dd></div><div><dt><kbd class="wide">Clic</kbd></dt><dd>Acercarte a una fotografía y leer su historia.</dd></div><div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>Con una ficha abierta, pasar a la foto anterior o siguiente.</dd></div><div><dt><kbd class="wide">Esc</kbd></dt><dd>Cerrar una ficha o ventana.</dd></div></dl><details class="visit-options"><summary>Opciones de la visita</summary><div class="options-row"><label for="quality">Calidad de imagen</label><select id="quality"><option value="high">Alta</option><option value="low">Reducida</option></select><button class="text-button" id="views-button">Archivo de vistas</button></div></details></div><div class="dialog-footer"><button class="button primary" data-close>Continuar la visita ${svg('arrow')}</button></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Antes de caminar</p><h2 id="help-title">Cómo recorrer</h2></div><button class="icon-button" data-close aria-label="Cerrar instrucciones">${svg('close')}</button></div><div class="dialog-body"><p class="help-lede">La exposición tiene dos salas unidas por un pasillo. En la Sala I están los diablitos; en el pasillo, la música; en la Sala II, el toro y el fuego.</p><dl class="controls-list"><div><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Caminar. También funcionan las flechas.</dd></div><div><dt><kbd class="wide">Arrastrar</kbd></dt><dd>Mirar alrededor con el ratón.</dd></div><div><dt><kbd>Q</kbd><kbd>E</kbd></dt><dd>Girar a la izquierda o a la derecha.</dd></div><div><dt><kbd class="wide">Shift</kbd></dt><dd>Caminar más rápido.</dd></div><div><dt><kbd class="wide">Clic</kbd></dt><dd>Acercarte a una fotografía y leer su historia.</dd></div><div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>Con una ficha abierta, pasar a la foto anterior o siguiente.</dd></div><div><dt><kbd class="wide">Esc</kbd></dt><dd>Cerrar una ficha o ventana.</dd></div></dl><details class="visit-options"><summary>Opciones de la visita</summary><div class="options-row"><label for="quality">Calidad de imagen</label><select id="quality"><option value="high">Alta</option><option value="low">Reducida</option></select><button class="text-button" id="views-button">Archivo de vistas</button></div></details></div><div class="dialog-footer"><button class="button" id="help-tutorial" type="button">Ver cómo se juega</button><button class="button primary" data-close>Continuar la visita ${svg('arrow')}</button></div></dialog>
   <dialog class="guide-dialog" id="guide-dialog" aria-labelledby="guide-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Para leer las fotografías</p><h2 id="guide-title">Guía de la fiesta</h2></div><button class="icon-button" data-close aria-label="Cerrar guía">${svg('close')}</button></div><div class="dialog-body">
     <p class="guide-lede">Cada fin de año, el pueblo Boruca recuerda su resistencia a la conquista. Los diablitos son la comunidad; el toro, los conquistadores. El baile recorre el pueblo de casa en casa del 30 de diciembre al 2 de enero.</p>
     <h3 class="guide-h">El rito en cuatro momentos</h3>
@@ -146,6 +148,7 @@ app.innerHTML = `
     </dl>
     <p class="guide-credit">Fotografías y crónica: Alonso Solano / El Observador · ©PerroMudo.</p>
   </div></dialog>
+  <dialog class="tutorial-dialog" id="tutorial-dialog" aria-label="Cómo se juega"></dialog>
   <dialog class="podium-dialog" id="podium-dialog" aria-label="Resultado final"></dialog>
   <dialog class="host-dialog" id="host-dialog" aria-labelledby="host-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Solo anfitrión</p><h2 id="host-title">Panel del anfitrión</h2></div><button class="icon-button" data-close aria-label="Cerrar panel">${svg('close')}</button></div><div class="dialog-body" id="host-body"></div></dialog>
   <dialog class="quiz-dialog" id="quiz-dialog" aria-labelledby="quiz-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker" id="quiz-kicker">El reto</p><h2 id="quiz-title" class="sr-only">El reto</h2></div><button class="icon-button" data-close aria-label="Cerrar el reto">${svg('close')}</button></div><div class="dialog-body" id="quiz-body"></div></dialog>
@@ -259,6 +262,8 @@ for (const id of ['#catalog-button','#welcome-catalog']) $(id).addEventListener(
 for (const id of ['#views-button','#welcome-views']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#views-dialog')));
 for (const id of ['#guide-button','#welcome-guide']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#guide-dialog')));
 $('#exit-button').addEventListener('click',leaveGallery);
+$('#tutorial-open').addEventListener('click',()=>showTutorial());
+$('#help-tutorial').addEventListener('click',()=>{$<HTMLDialogElement>('#help-dialog').close();showTutorial();});
 const hostPanel=mountHost($('#host-body'));
 $('#host-open').addEventListener('click',()=>{openDialog($<HTMLDialogElement>('#host-dialog'));hostPanel.show();});
 $('#host-dialog').addEventListener('close',()=>hostPanel.stop());
@@ -465,10 +470,16 @@ function joinProblem(message:string):void{
 nameInput.addEventListener('input',()=>{
   $('#join-error').hidden=true;nameInput.removeAttribute('aria-invalid');nameInput.closest('.join-row')!.classList.remove('invalid');stopWaiting();
 });
-function proceedToVisit():void{
+function continueToVisit():void{
   if(geometryLoaded){enterGallery();return;}
   entryRequested=true;$('#enter-button').classList.add('waiting');
   $('#entry-status').textContent='La galería se abrirá en cuanto esté lista.';
+}
+/** First entry of the session: teach how to play while the 3D room loads in the background. */
+function proceedToVisit():void{
+  if(store.get('diablitos.tutorial')){continueToVisit();return;}
+  store.set('diablitos.tutorial','1');
+  showTutorial({onDone:continueToVisit});
 }
 function waitForHost(name:string):void{
   joinWait.hidden=false;joinWait.textContent='Todavía no hay una partida abierta. Esperando a que el anfitrión la inicie…';

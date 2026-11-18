@@ -76,7 +76,7 @@ class Confetti{
 }
 
 /** A fan of feathers for the winner, the same crown as the entry screen. */
-function crown():SVGSVGElement{
+export function crown():SVGSVGElement{
   const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
   svg.setAttribute('viewBox','0 0 220 100');svg.setAttribute('class','crown');svg.setAttribute('aria-hidden','true');
   const count=15;

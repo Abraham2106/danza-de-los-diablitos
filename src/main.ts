@@ -87,7 +87,7 @@ app.innerHTML = `
     </div>
     <section class="join">
       <p class="kicker">Museo digital</p>
-      <h1 id="exhibition-title"><span class="h1-lead">El baile de los</span><span class="h1-main">Diablitos</span></h1>
+      <h1 id="exhibition-title"><span class="h1-lead">El baile de los</span><span class="h1-main">Diablitos</span><span class="h1-native" translate="no"><span class="native-name">Cagrúv Rójc</span><span class="native-tag">en boruca</span></span></h1>
       <ol class="join-steps" aria-label="Cómo funciona la actividad">
         <li><b>1</b><span>Escribe tu nombre</span></li>
         <li><b>2</b><span>Recorre y abre las 12 fotos</span></li>
@@ -389,7 +389,7 @@ async function initialize(): Promise<void> {
     const response=await fetch(assetUrl('data/exhibition.json'));if(!response.ok)throw new Error('No se pudo cargar la exposición.');
     exhibition=parseExhibition(await response.json());populateCatalog();updateSeen();setProgress(.04);
     $('.brand-name').textContent=exhibition.title;
-    document.title=`${exhibition.title} · Museo digital`;
+    document.title=`${exhibition.title} (Cagrúv Rójc) · Museo digital`;
     if (!window.WebGL2RenderingContext||!document.createElement('canvas').getContext('webgl2')) {
       showEntryHelp('Conoce la exposición a través de las fotografías y las imágenes de las salas.',false);return;
     }

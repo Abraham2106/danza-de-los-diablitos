@@ -1,6 +1,6 @@
 # Danza de los Diablitos · Galería virtual
 
-Exposición fotográfica del Baile de los Diablitos en el Territorio Indígena Boruca. Aplicación estática con Three.js, TypeScript y Vite; visita en primera persona, catálogo, enfoque de fotografías y fichas descriptivas. Las fotografías conservan sus marcas de agua y créditos.
+Exposición fotográfica del Baile de los Diablitos (en boruca, *Cagrúv Rójc*) en el Territorio Indígena Boruca. Aplicación estática con Three.js, TypeScript y Vite; visita en primera persona, catálogo, enfoque de fotografías y fichas descriptivas. Las fotografías conservan sus marcas de agua y créditos.
 
 ## Ejecutar y verificar
 

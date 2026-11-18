@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "title": "Baile de los Diablitos",
   "subtitle": "Una tradición viva del pueblo Boruca · Máscaras, música y resistencia",
-  "source": "Crónica y fotografías aportadas por el usuario · Alonso Solano / El Observador",
+  "source": "Crónica y fotografías de Alonso Solano / El Observador",
   "model": "models/gallery.glb",
   "artworks": [
     {
@@ -20,8 +20,8 @@
       "width": 2.4000000953674587,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "El toro y los diablitos se encuentran en las calles de Boruca. La celebración representa la resistencia del pueblo indígena frente a la conquista: el toro encarna a los conquistadores y los diablitos al pueblo Boruca. La crónica aportada relata la festividad del cierre de 2024 y el inicio de 2025.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "El toro y los diablitos se encuentran en las calles de Boruca. La fiesta recuerda la resistencia del pueblo indígena frente a la conquista: el toro encarna a los conquistadores y los diablitos, al pueblo Boruca. Estas imágenes son de la celebración que despidió 2024 y recibió 2025.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -18.0,
@@ -46,8 +46,8 @@
       "width": 2.4000000953674587,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "Una máscara de expresión marcada, plumas y tejidos acompaña al participante durante el recorrido. El diablito mayor es una figura de referencia en el baile. Esta fotografía abre una mirada a quienes mantienen viva la ceremonia y a la fuerza expresiva de sus máscaras.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Con una máscara de gesto feroz, plumas y tejidos, el diablito mayor guía al grupo durante el recorrido. Es una figura de respeto en el baile y uno de los rostros que mantienen viva la ceremonia.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -10.0,
@@ -72,8 +72,8 @@
       "width": 2.4000000953674387,
       "height": 1.5,
       "frame": "metal",
-      "description": "Reptiles y felinos aparecen en las máscaras de este encuentro. La crónica destaca diseños de culebras, jaguares, aves y calaveras, junto con la búsqueda de creaciones cada vez más originales. Los colores y las formas hacen de cada máscara una pieza singular.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Culebras, jaguares, aves y calaveras aparecen en las máscaras de este encuentro. Cada año los artesanos buscan diseños más originales, y sus colores y formas hacen de cada máscara una pieza única.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -8.345,
@@ -98,8 +98,8 @@
       "width": 2.4000000953674387,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "Un búho corona una máscara rodeada de plumas y otras figuras. Durante la celebración, las máscaras reúnen talla, pintura y creatividad. Una máscara que fue «jugada» es una pieza que participó en el baile y conserva la memoria de esa experiencia.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Un búho corona una máscara rodeada de plumas y otras figuras. Cada máscara reúne talla, pintura y creatividad. Cuando una máscara ha sido «jugada», ya bailó en la fiesta y guarda la memoria de esa experiencia.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -8.345,
@@ -124,8 +124,8 @@
       "width": 2.4000000953674587,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "Las plumas rojas, las máscaras y la pintura corporal forman parte de la presencia visual de los participantes. A estos elementos se suman vestimentas de gangoche y hojas de plátano, descritas en la crónica. El baile convierte las piezas elaboradas por los artesanos en imágenes en movimiento.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Plumas rojas, máscaras y pintura corporal marcan la presencia de los participantes, que también visten gangoche y hojas de plátano. En el baile, las piezas de los artesanos cobran vida y movimiento.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -14.0,
@@ -150,8 +150,8 @@
       "width": 2.4000000953674316,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "Los participantes avanzan juntos, con máscaras, plumas y varas. La lucha ritual se desarrolla durante el recorrido por el pueblo: el toro y los diablitos se detienen en distintas casas y continúan sus enfrentamientos. La participación colectiva sostiene el ritmo de la celebración.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Los participantes avanzan juntos, con máscaras, plumas y varas. La lucha ritual recorre el pueblo: el toro y los diablitos se detienen en distintas casas y retoman sus enfrentamientos. La fuerza del grupo sostiene el ritmo de la fiesta.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -14.0,
@@ -176,8 +176,8 @@
       "width": 2.4000000953674587,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "Un participante señala hacia delante en medio del recorrido. Los diablitos provocan al toro y este responde con embestidas dentro de la representación ritual. Los gestos, la pintura corporal y las máscaras hacen visible la energía de la lucha narrada en el Baile de los Diablitos.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Un participante señala hacia delante en medio del recorrido. Los diablitos provocan al toro y este responde con embestidas. Los gestos, la pintura corporal y las máscaras le dan forma a la energía de la lucha.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -14.0,
@@ -202,8 +202,8 @@
       "width": 1.4624999761581587,
       "height": 1.9500000476837158,
       "frame": "metal",
-      "description": "El músico toca una flauta bajo una máscara con motivos de jaguar y un amplio conjunto de plumas. La música acompaña el baile y enlaza el movimiento de los participantes. Flautas, tambores, cuernos y caracoles forman parte del ambiente descrito en la crónica.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "El músico toca una flauta bajo una máscara con motivos de jaguar y un gran penacho de plumas. La música acompaña el baile y marca el paso de los participantes, entre flautas, tambores, cuernos y caracoles.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           -0.0,
@@ -228,8 +228,8 @@
       "width": 2.4000000953674387,
       "height": 1.5,
       "frame": "metal",
-      "description": "Un tambor y varias flautas acompañan el recorrido. La música está presente durante los enfrentamientos y en el cierre de las fiestas. En las casas también se comparte chicha, una bebida de maíz fermentado que la crónica relaciona con la energía necesaria para sostener los días de celebración.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Un tambor y varias flautas acompañan el recorrido. La música suena durante los enfrentamientos y hasta el cierre de la fiesta. En las casas se comparte chicha, una bebida de maíz fermentado que da energía para aguantar los días de celebración.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           8.345,
@@ -254,8 +254,8 @@
       "width": 2.4000000953674587,
       "height": 1.5,
       "frame": "metal",
-      "description": "El toro, llamado Xaman en el texto aportado, es una estructura de madera cubierta con gangoche y una cara de toro. La crónica indica un peso aproximado de 40 kilos, por lo que varios participantes se turnan para llevarlo. Su encuentro con los diablitos representa la batalla entre conquista y resistencia.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "El toro, al que también llaman Xaman, es una estructura de madera cubierta con gangoche y una cara de toro. Pesa unos 40 kilos, por eso varios participantes se turnan para cargarlo. Su encuentro con los diablitos representa la batalla entre la conquista y la resistencia.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           14.0,
@@ -280,8 +280,8 @@
       "width": 2.400000095367477,
       "height": 1.7999999523162842,
       "frame": "metal",
-      "description": "En el cierre de la representación, el toro derrota a los diablitos y estos caen: es el momento conocido como La Tumbazón. Después se levantan, buscan al toro y lo conducen hacia el cierre de la ceremonia. La escena enlaza la caída con la continuidad y la resistencia del pueblo Boruca.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "Al final de la representación, el toro vence a los diablitos y estos caen: es el momento conocido como La Tumbazón. Luego se levantan, buscan al toro y lo llevan hacia el cierre de la ceremonia. La caída da paso a la continuidad y a la resistencia del pueblo Boruca.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           11.715,
@@ -306,8 +306,8 @@
       "width": 2.400000095367477,
       "height": 1.5,
       "frame": "metal",
-      "description": "La quema del toro cierra la celebración narrada en la crónica, entre música, gritos y el encuentro de participantes y visitantes. El fuego marca el final de la representación y la fuerza de una tradición que continúa viva. La fotografía recoge ese ambiente nocturno sin recortar su marca de autor.",
-      "source": "Fotografías aportadas por el usuario · marca ©PerroMudo",
+      "description": "La quema del toro cierra la celebración entre música, gritos y el encuentro de participantes y visitantes. El fuego marca el final de la representación y la fuerza de una tradición que sigue viva.",
+      "source": "Fotografía de Alonso Solano / El Observador · ©PerroMudo",
       "observation": {
         "position": [
           16.285,

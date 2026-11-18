@@ -56,4 +56,4 @@ Antes de publicar, comprobar el GLB exportado: entrada válida, recorrido por am
 
 La aplicación incorpora materiales de la exportación, entorno de reflejos y luz ambiental/direccional ligera. La arquitectura con iluminación horneada debe exportarse con materiales sin iluminación adicional (`KHR_materials_unlit`). Los materiales de metal, vidrio y marcos mantienen PBR. Cambiar paneles o luces requiere regenerar los mapas horneados en Blender.
 
-La interfaz sirve Instrument Serif y DM Sans desde archivos locales con licencia OFL, con Georgia y system-ui como alternativas.
+La interfaz sirve Unbounded, Josefin Sans y Newsreader (OFL) desde los paquetes @fontsource-variable, con Georgia y system-ui como alternativas.

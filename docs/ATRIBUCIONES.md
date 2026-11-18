@@ -27,7 +27,7 @@ La arquitectura parte de la referencia HTML facilitada anteriormente. El modelo 
 
 Modelos y texturas de árboles: [Quaternius — Ultimate Stylized Nature Pack](https://quaternius.com/packs/ultimatestylizednature.html), licencia CC0 1.0. Fuentes y verificación en `assets/trees/provenance.json`.
 
-Instrument Serif y DM Sans se sirven localmente y conservan sus licencias OFL. El código web usa Three.js, Vite, TypeScript y Vitest, con versiones fijadas y licencias de sus dependencias.
+Unbounded, Josefin Sans y Newsreader se sirven desde los paquetes @fontsource-variable y conservan sus licencias SIL OFL 1.1. El código web usa Three.js, Vite, TypeScript y Vitest, con versiones fijadas y licencias de sus dependencias.
 
 ## Máscara de exposición
 

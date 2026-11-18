@@ -2,7 +2,7 @@
 
 Actualización del 7 de octubre de 2026.
 
-Las 12 cartelas físicas ahora miden 80 × 48 cm, frente a 40 × 25 cm. Usan DM Sans, título destacado, número de fotografía, crédito completo y ubicación. La superficie marfil y el texto oscuro conservan su contraste con la iluminación de la sala. Cada textura se genera una sola vez a 1200 × 720, con mipmaps y filtrado anisotrópico; las letras pequeñas convertidas a geometría se ocultan. El texto se toma del catálogo y se envuelve por palabras, conservando acentos. Hacer clic en una cartela enfoca su fotografía y abre la ficha.
+Las 12 cartelas físicas ahora miden 80 × 48 cm, frente a 40 × 25 cm. Llevan a la izquierda la faja tejida Boruca, el número de la fotografía, la sala, el número y el título en Unbounded, el crédito y la sala en Josefin Sans y la indicación «Clic para abrir la ficha». La superficie de algodón y el texto oscuro conservan su contraste con la iluminación de la sala. Cada textura se genera una sola vez a 1200 × 720, con mipmaps y filtrado anisotrópico; las letras pequeñas convertidas a geometría se ocultan. El texto se toma del catálogo y se envuelve por palabras, conservando acentos. Hacer clic en una cartela enfoca su fotografía y abre la ficha.
 
 ![Cartela junto a El toro y los diablitos](cartelas-despues.png)
 

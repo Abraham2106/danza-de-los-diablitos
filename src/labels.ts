@@ -19,26 +19,33 @@ export function labelPosition(art:Artwork):THREE.Vector3 {
     .addScaledVector(normal,.022).setY(1.45);
 }
 
+/** Woven-belt stripes of a Boruca textile, shared by the placards and the interface. */
+export const FAJA=['#1f2859','#3547b8','#f7b731','#9b3fa8','#f7b731','#3547b8','#e5502f','#3547b8','#f7b731','#9b3fa8','#f7b731','#3547b8','#1f2859'];
+
 /** Readable physical placards, generated once; no DOM overlays or frame work. */
-export async function addArtworkLabels(model:THREE.Group,artworks:Artwork[],anisotropy:number):Promise<void>{
-  await document.fonts.load('600 88px "DM Sans"');
-  await document.fonts.load('400 64px "DM Sans"');
+export async function addArtworkLabels(model:THREE.Group,artworks:Artwork[],anisotropy:number,chapter:(art:Artwork)=>string=()=>'Boruca'):Promise<void>{
+  await Promise.all(['800 80px "Unbounded Variable"','600 42px "Josefin Sans Variable"','italic 300 54px "Josefin Sans Variable"'].map(font=>document.fonts.load(font)));
   model.traverse(object=>{if(/^Label(?:Text|Board)_art-\d+/.test(object.name))object.visible=false;});
   const faceGeometry=new THREE.PlaneGeometry(LABEL_WIDTH,LABEL_HEIGHT);
   const boardGeometry=new THREE.BoxGeometry(LABEL_WIDTH+.012,LABEL_HEIGHT+.012,.014);
-  const boardMaterial=new THREE.MeshStandardMaterial({color:0xe8e5df,roughness:.9});
+  const boardMaterial=new THREE.MeshStandardMaterial({color:0x1f2859,roughness:.8});
   model.updateMatrixWorld(true);
   artworks.forEach((art,index)=>{
     const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=720;
     const ctx=canvas.getContext('2d')!;
-    ctx.fillStyle='#f6f3ed';ctx.fillRect(0,0,1200,720);
-    ctx.fillStyle='#50615f';ctx.font='500 46px "DM Sans"';ctx.fillText(`FOTOGRAFÍA ${String(index+1).padStart(2,'0')}`,64,82);
-    ctx.fillStyle='#172326';ctx.font='600 88px "DM Sans"';
-    const title=wrapLabel(art.title,t=>ctx.measureText(t).width,1072);
-    let y=188;for(const line of title){ctx.fillText(line,64,y);y+=104;}
-    ctx.fillStyle='#2f3c3e';ctx.font='400 64px "DM Sans"';
-    y+=30;for(const line of wrapLabel(art.artist,t=>ctx.measureText(t).width,1072)){ctx.fillText(line,64,y);y+=80;}
-    ctx.fillStyle='#455653';ctx.font='400 58px "DM Sans"';ctx.fillText('Boruca · Costa Rica',64,656);
+    ctx.fillStyle='#fff9ef';ctx.fillRect(0,0,1200,720);
+    // Left woven band: the textile stripes run along the placard edge.
+    const band=56,stripe=band/FAJA.length;FAJA.forEach((color,i)=>{ctx.fillStyle=color;ctx.fillRect(i*stripe,0,stripe+1,720);});
+    const x=band+60;
+    ctx.fillStyle='#e5502f';ctx.font='800 80px "Unbounded Variable"';ctx.fillText(String(index+1).padStart(2,'0'),x,124);
+    const numberWidth=ctx.measureText(String(index+1).padStart(2,'0')).width;
+    ctx.fillStyle='#5b6089';ctx.font='600 42px "Josefin Sans Variable"';ctx.fillText(chapter(art).toUpperCase(),x+numberWidth+28,116);
+    ctx.fillStyle='#1f2859';ctx.font='700 66px "Unbounded Variable"';
+    const title=wrapLabel(art.title,t=>ctx.measureText(t).width,1200-x-60);
+    let y=246;for(const line of title.slice(0,3)){ctx.fillText(line,x,y);y+=80;}
+    ctx.fillStyle='#5b6089';ctx.font='italic 300 54px "Josefin Sans Variable"';
+    y+=18;for(const line of wrapLabel(art.artist,t=>ctx.measureText(t).width,1200-x-60)){ctx.fillText(line,x,y);y+=62;}
+    ctx.fillStyle='#3547b8';ctx.font='600 38px "Josefin Sans Variable"';ctx.fillText('CLIC PARA ABRIR LA FICHA',x,664);
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=anisotropy;
     const label=new THREE.Group();label.name=`ReadableLabel_${art.id}`;label.userData.artworkId=art.id;
     const face=new THREE.Mesh(faceGeometry,new THREE.MeshBasicMaterial({map:texture,toneMapped:false}));

@@ -103,6 +103,7 @@ app.innerHTML = `
         <p class="join-wait" id="join-wait" role="status" aria-live="polite" hidden></p>
       </form>
       <p class="entry-progress" id="entry-progress"><span class="progress-bar"><i id="progress-fill"></i></span><span id="progress-text">Preparando la sala…</span></p>
+      <div class="join-free"><p>¿Solo quieres conocer el taller? Recorre el museo a tu ritmo, sin puntos ni preguntas.</p><button class="button" id="free-visit" type="button">Visitar sin competir</button></div>
       <p class="sr-only" id="entry-status" role="status"></p>
       <div class="entry-help" id="entry-help" hidden>
         <p id="entry-error" role="alert"></p>
@@ -262,6 +263,7 @@ for (const id of ['#catalog-button','#welcome-catalog']) $(id).addEventListener(
 for (const id of ['#views-button','#welcome-views']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#views-dialog')));
 for (const id of ['#guide-button','#welcome-guide']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#guide-dialog')));
 $('#exit-button').addEventListener('click',leaveGallery);
+$('#free-visit').addEventListener('click',()=>{stopWaiting();setFreeVisit(true);continueToVisit();});
 $('#tutorial-open').addEventListener('click',()=>showTutorial());
 $('#help-tutorial').addEventListener('click',()=>{$<HTMLDialogElement>('#help-dialog').close();showTutorial();});
 const hostPanel=mountHost($('#host-body'));
@@ -282,7 +284,7 @@ function pendingTotal():number{
 function markSeen(artwork:Artwork):void{
   const section=sectionOfPhoto(artwork.id),wasOpen=section>=0&&isUnlocked(section,seen);
   seen.add(artwork.id);store.set('diablitos.seen',[...seen].join(','));updateSeen();
-  if(section>=0&&!wasOpen&&isUnlocked(section,seen)){
+  if(!freeVisit&&section>=0&&!wasOpen&&isUnlocked(section,seen)){
     promptSection=section;
     toast(`Sección ${section+1} completa: se desbloquearon ${questionsOf(section).length} preguntas.`);
   }
@@ -442,7 +444,7 @@ function setProgress(value:number):void{
 function enterGallery(): void {
   entryRequested=false;
   $('#entry-status').textContent='';$('#enter-button').classList.remove('waiting');
-  $('#player-label').textContent=playerName?`Visitante: ${playerName}`:'Boruca · Museo digital';
+  $('#player-label').textContent=freeVisit?'Visita libre':playerName?`Visitante: ${playerName}`:'Boruca · Museo digital';
   visiting=true;welcome.hidden=true;canvas.hidden=false;$('.topbar').hidden=false;$('#hud').hidden=false;canvas.focus();
   currentRoom=undefined;drawMinimap();invalidate();void syncScore();
 }
@@ -451,6 +453,9 @@ function leaveGallery(): void {
   visiting=false;keys.clear();dragging=null;canvas.hidden=true;$('.topbar').hidden=true;$('#hud').hidden=true;welcome.hidden=false;
   $('#chapter').hidden=true;nameInput.focus();
 }
+/** Free visit: walk the museum with no name, no host, no points, no questions and no ranking. */
+let freeVisit=false;
+function setFreeVisit(on:boolean):void{freeVisit=on;document.body.classList.toggle('free-visit',on);}
 const nameInput=$<HTMLInputElement>('#player-name');nameInput.value=playerName;
 /** Online session of this student: the server token proves who they are if the page reloads. */
 type Online={token:string;gameId:string};
@@ -513,7 +518,7 @@ $<HTMLFormElement>('#join-form').addEventListener('submit',event=>{
   const name=nameInput.value.trim().replace(/\s+/g,' ');
   if(!name){$('#join-error').hidden=false;nameInput.setAttribute('aria-invalid','true');nameInput.closest('.join-row')!.classList.add('invalid');nameInput.focus();return;}
   playerName=name;store.set('diablitos.player',name);
-  stopWaiting();void tryJoin(name);
+  setFreeVisit(false);stopWaiting();void tryJoin(name);
 });
 
 /** Send raw answers (never points): the server scores them, so the ranking cannot be faked. */

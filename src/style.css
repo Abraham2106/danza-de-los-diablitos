@@ -97,6 +97,10 @@ kbd.wide{padding:0 10px}
 .entry-progress.ready{color:var(--selva)}
 .entry-help{margin-top:22px;max-width:44ch;font:500 16px/1.5 var(--ui);color:var(--suave);display:flex;flex-wrap:wrap;gap:4px 16px}
 .entry-help p{width:100%;color:var(--tinta)}
+.join-free{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:18px;padding:14px 16px 14px 20px;border-radius:24px;background:var(--arena)}
+.join-free p{flex:1 1 220px;font:600 15px/1.4 var(--ui);color:var(--texto)}
+.join-free .button{min-height:44px;padding:0 20px;font-size:15px}
+body.free-visit .points,body.free-visit .seen,body.free-visit #quiz-button{display:none}
 .join-links{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:26px;padding-top:18px;border-top:2px dashed var(--linea)}
 .join-links .text-button{white-space:nowrap}
 

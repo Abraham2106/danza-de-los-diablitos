@@ -18,6 +18,8 @@ import {addArtworkLabels} from './labels';
 import {replaceFurnishings} from './furnishings';
 import {QUESTIONS,SECTIONS,SECTION_SIZE,QUESTION_TIME,READ_TIME,MAX_POINTS,isUnlocked,seenInSection,sectionOfPhoto,questionsOf,pendingQuestions,makeAnswer,summarize,verdict,type Answer,type Answers,type Level} from './quiz';
 import {ROOMS,roomOf,type RoomKey} from './rooms';
+import {api,type RawAnswer} from './api';
+import {mountHost} from './host';
 
 const icons = {
   arrow:'<path d="M3 9h11M10 5l4 4-4 4"/>', close:'<path d="m5 5 8 8M13 5l-8 8"/>',
@@ -30,6 +32,7 @@ const icons = {
   prev:'<path d="M11 4 6 9l5 5"/>', next:'<path d="m7 4 5 5-5 5"/>',
   book:'<path d="M2 3h5a2 2 0 0 1 2 2v10a2 2 0 0 0-2-2H2zM16 3h-5a2 2 0 0 0-2 2v10a2 2 0 0 1 2-2h5z"/>',
   spark:'<path d="M9 1.5 11 7l5.5 2-5.5 2L9 16.5 7 11 1.5 9 7 7z"/>',
+  lock:'<rect x="3" y="8" width="12" height="8" rx="2"/><path d="M6 8V6a3 3 0 0 1 6 0v2"/>',
   exit:'<path d="M7 3H3v12h4M12 5l4 4-4 4M16 9H7"/>', down:'<path d="M9 3v12M4 10l5 5 5-5"/>',
 };
 const svg = (name: keyof typeof icons) => `<svg viewBox="0 0 18 18" aria-hidden="true">${icons[name]}</svg>`;
@@ -64,7 +67,7 @@ const app = document.querySelector<HTMLDivElement>('#app')!;
 app.innerHTML = `
   <canvas id="gallery-canvas" tabindex="0" aria-label="Recorrido por la galería. Usa WASD o las flechas para caminar y arrastra el ratón para mirar." hidden></canvas>
   <header class="topbar" hidden>
-    <div class="brand">${brandMark}<div><p class="brand-name">Baile de los Diablitos</p><p class="brand-meta"><span id="player-label"></span></p></div><div class="seen" id="seen" aria-live="polite"><span class="seen-count"><b id="seen-count">0</b>/<span id="seen-total">12</span></span><span class="seen-text">fotografías<br/>vistas</span></div><div class="points"><b id="points-total">0</b><span class="seen-text">puntos</span></div></div>
+    <div class="brand">${brandMark}<div><p class="brand-name">Baile de los Diablitos</p><p class="brand-meta"><span id="player-label"></span></p></div><div class="seen" id="seen" aria-live="polite"><span class="seen-count"><b id="seen-count">0</b>/<span id="seen-total">12</span></span><span class="seen-text">fotografías<br/>vistas</span></div><div class="points"><b id="points-total">0</b><span class="seen-text" id="points-label">puntos</span></div></div>
     <nav class="toolbar" aria-label="Visita">
       <button class="tool tool-reto" id="quiz-button" aria-label="El reto">${svg('spark')}<span>El reto</span><b class="badge" id="quiz-badge" hidden>0</b></button>
       <button class="tool" id="catalog-button" aria-label="Fotografías">${svg('grid')}<span>Fotografías</span></button>
@@ -95,6 +98,7 @@ app.innerHTML = `
           <button class="button primary enter" id="enter-button" type="submit">Entrar ${svg('arrow')}</button>
         </div>
         <p class="join-error" id="join-error" role="alert" hidden>Escribe tu nombre para entrar.</p>
+        <p class="join-wait" id="join-wait" role="status" aria-live="polite" hidden></p>
       </form>
       <p class="entry-progress" id="entry-progress"><span class="progress-bar"><i id="progress-fill"></i></span><span id="progress-text">Preparando la sala…</span></p>
       <p class="sr-only" id="entry-status" role="status"></p>
@@ -106,6 +110,7 @@ app.innerHTML = `
       <nav class="join-links" aria-label="Antes de entrar">
         <button class="text-button" id="welcome-guide" type="button">Guía de la fiesta</button>
         <button class="text-button" id="welcome-catalog" type="button">Ver las fotografías</button>
+        <button class="text-button host-link" id="host-open" type="button">${svg('lock')}Host</button>
       </nav>
     </section>
     </div>
@@ -140,6 +145,7 @@ app.innerHTML = `
     </dl>
     <p class="guide-credit">Fotografías y crónica: Alonso Solano / El Observador · ©PerroMudo.</p>
   </div></dialog>
+  <dialog class="host-dialog" id="host-dialog" aria-labelledby="host-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Solo anfitrión</p><h2 id="host-title">Panel del anfitrión</h2></div><button class="icon-button" data-close aria-label="Cerrar panel">${svg('close')}</button></div><div class="dialog-body" id="host-body"></div></dialog>
   <dialog class="quiz-dialog" id="quiz-dialog" aria-labelledby="quiz-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker" id="quiz-kicker">El reto</p><h2 id="quiz-title" class="sr-only">El reto</h2></div><button class="icon-button" data-close aria-label="Cerrar el reto">${svg('close')}</button></div><div class="dialog-body" id="quiz-body"></div></dialog>
   <dialog class="catalog-dialog" id="catalog-dialog" aria-labelledby="catalog-title"><div class="dialog-header"><div><p class="kicker">Catálogo · 12 fotografías</p><h2 id="catalog-title">Fotografías del baile</h2></div><button class="icon-button" data-close aria-label="Cerrar fotografías">${svg('close')}</button></div><div class="dialog-body"><div id="catalog-grid"></div></div></dialog>
   <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><p id="detail-index"></p><div class="detail-nav"><button class="icon-button" id="detail-prev" aria-label="Fotografía anterior">${svg('prev')}</button><button class="icon-button" id="detail-next" aria-label="Fotografía siguiente">${svg('next')}</button><button class="icon-button" data-close aria-label="Cerrar ficha">${svg('close')}</button></div></div><div class="dialog-body" id="detail-content"></div></dialog>
@@ -251,6 +257,9 @@ for (const id of ['#catalog-button','#welcome-catalog']) $(id).addEventListener(
 for (const id of ['#views-button','#welcome-views']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#views-dialog')));
 for (const id of ['#guide-button','#welcome-guide']) $(id).addEventListener('click',()=>openDialog($<HTMLDialogElement>('#guide-dialog')));
 $('#exit-button').addEventListener('click',leaveGallery);
+const hostPanel=mountHost($('#host-body'));
+$('#host-open').addEventListener('click',()=>{openDialog($<HTMLDialogElement>('#host-dialog'));hostPanel.show();});
+$('#host-dialog').addEventListener('close',()=>hostPanel.stop());
 $('#quiz-button').addEventListener('click',openQuizHome);
 $('#detail-prev').addEventListener('click',()=>stepArtwork(-1));
 $('#detail-next').addEventListener('click',()=>stepArtwork(1));
@@ -428,7 +437,7 @@ function enterGallery(): void {
   $('#entry-status').textContent='';$('#enter-button').classList.remove('waiting');
   $('#player-label').textContent=playerName?`Visitante: ${playerName}`:'Boruca · Museo digital';
   visiting=true;welcome.hidden=true;canvas.hidden=false;$('.topbar').hidden=false;$('#hud').hidden=false;canvas.focus();
-  currentRoom=undefined;drawMinimap();invalidate();
+  currentRoom=undefined;drawMinimap();invalidate();void syncScore();
 }
 function leaveGallery(): void {
   for(const dialog of dialogs)if(dialog.open)dialog.close();
@@ -436,16 +445,86 @@ function leaveGallery(): void {
   $('#chapter').hidden=true;nameInput.focus();
 }
 const nameInput=$<HTMLInputElement>('#player-name');nameInput.value=playerName;
-nameInput.addEventListener('input',()=>{$('#join-error').hidden=true;nameInput.removeAttribute('aria-invalid');nameInput.closest('.join-row')!.classList.remove('invalid');});
+/** Online session of this student: the server token proves who they are if the page reloads. */
+type Online={token:string;gameId:string};
+let online:Online|undefined;
+try{
+  const saved=JSON.parse(store.get('diablitos.online')||'null') as Partial<Online>|null;
+  if(saved&&typeof saved.token==='string'&&typeof saved.gameId==='string')online={token:saved.token,gameId:saved.gameId};
+}catch{/* ignore */}
+const saveOnline=()=>store.set('diablitos.online',online?JSON.stringify(online):'');
+const joinWait=$('#join-wait');
+let waitTimer=0,joining=false;
+function stopWaiting():void{clearTimeout(waitTimer);waitTimer=0;joinWait.hidden=true;}
+function joinProblem(message:string):void{
+  $('#join-error').textContent=message;$('#join-error').hidden=false;
+  nameInput.setAttribute('aria-invalid','true');nameInput.closest('.join-row')!.classList.add('invalid');
+}
+nameInput.addEventListener('input',()=>{
+  $('#join-error').hidden=true;nameInput.removeAttribute('aria-invalid');nameInput.closest('.join-row')!.classList.remove('invalid');stopWaiting();
+});
+function proceedToVisit():void{
+  if(geometryLoaded){enterGallery();return;}
+  entryRequested=true;$('#enter-button').classList.add('waiting');
+  $('#entry-status').textContent='La galería se abrirá en cuanto esté lista.';
+}
+function waitForHost(name:string):void{
+  joinWait.hidden=false;joinWait.textContent='Todavía no hay una partida abierta. Esperando a que el anfitrión la inicie…';
+  clearTimeout(waitTimer);waitTimer=window.setTimeout(()=>void tryJoin(name),3000);
+}
+/** Online if the server answers; otherwise the activity runs locally on this computer, as before. */
+async function tryJoin(name:string):Promise<void>{
+  if(joining)return;joining=true;
+  try{
+    const status=await api.status();
+    if(!status.ok){
+      if(status.offline){online=undefined;saveOnline();stopWaiting();proceedToVisit();return;}
+      joinProblem(status.message);return;
+    }
+    if(!status.data.open){waitForHost(name);return;}
+    const returning=online&&online.gameId===status.data.gameId?online.token:undefined;
+    const joined=await api.join(name,returning);
+    if(!joined.ok){
+      if(joined.error==='sin_partida'){waitForHost(name);return;}
+      stopWaiting();joinProblem(joined.message);return;
+    }
+    // A different game than the one this tab remembers: start its progress clean.
+    if(online&&online.gameId!==joined.data.gameId)resetProgress();
+    online={token:joined.data.token,gameId:joined.data.gameId};saveOnline();
+    playerName=joined.data.name;store.set('diablitos.player',playerName);
+    stopWaiting();proceedToVisit();
+  }finally{joining=false;}
+}
 $<HTMLFormElement>('#join-form').addEventListener('submit',event=>{
   event.preventDefault();
   const name=nameInput.value.trim().replace(/\s+/g,' ');
   if(!name){$('#join-error').hidden=false;nameInput.setAttribute('aria-invalid','true');nameInput.closest('.join-row')!.classList.add('invalid');nameInput.focus();return;}
   playerName=name;store.set('diablitos.player',name);
-  if(geometryLoaded){enterGallery();return;}
-  entryRequested=true;$('#enter-button').classList.add('waiting');
-  $('#entry-status').textContent='La galería se abrirá en cuanto esté lista.';
+  stopWaiting();void tryJoin(name);
 });
+
+/** Send raw answers (never points): the server scores them, so the ranking cannot be faked. */
+let syncing=false,syncAgain=false,syncRetries=0;
+function setRank(rank?:number,total?:number):void{$('#points-label').textContent=rank?`puntos · puesto ${rank}/${total}`:'puntos';}
+function endOnline(message:string):void{toast(message);online=undefined;saveOnline();setRank();}
+async function syncScore():Promise<void>{
+  if(!online)return;
+  if(syncing){syncAgain=true;return;}
+  syncing=true;
+  try{
+    do{
+      syncAgain=false;const session=online;if(!session)break;
+      const list:RawAnswer[]=Object.values(answers).filter(a=>Number.isInteger(a.choice)).map(a=>({question:a.question,choice:a.choice,ms:Math.round(a.ms)}));
+      if(!list.length)break;
+      const result=await api.score(session.token,list);
+      if(result.ok){syncRetries=0;setRank(result.data.rank,result.data.total);}
+      else if(result.error==='partida_terminada')endOnline('El anfitrión terminó la partida. Tus resultados quedaron guardados.');
+      else if(result.error==='sesion_invalida')endOnline('Tu sesión en la partida ya no existe. Vuelve a la portada para entrar de nuevo.');
+      else if(result.offline&&syncRetries<5){syncRetries++;window.setTimeout(()=>void syncScore(),8000*syncRetries);}
+    }while(syncAgain&&online);
+  }finally{syncing=false;}
+}
+
 function announceRoom(key:RoomKey):void{
   if(!exhibition)return;const room=ROOMS[key];const count=exhibition.artworks.filter(a=>roomOf(a.position[0])===key).length;
   $('#room-label').textContent=room.label;$('#room-name').textContent=room.name;
@@ -662,7 +741,7 @@ function quizAnswers():void{
 function answerQuiz(choice:number):void{
   if(!quiz||quiz.locked||quiz.reading)return;quiz.locked=true;stopQuizTimer();
   const run=quiz,index=run.current,q=QUESTIONS[index],answer=makeAnswer(index,choice,performance.now()-run.started);
-  answers[index]=answer;saveAnswers();updateSeen();quizDialog.dataset.state='feedback';
+  answers[index]=answer;saveAnswers();updateSeen();void syncScore();quizDialog.dataset.state='feedback';
   document.querySelectorAll<HTMLButtonElement>('.quiz-option').forEach((button,i)=>{button.disabled=true;button.classList.toggle('is-answer',i===q.answer);button.classList.toggle('is-wrong',i===choice&&!answer.correct);button.classList.toggle('is-muted',i!==q.answer&&i!==choice);});
   $('.quiz-score').textContent=`${fmt(summarize(answers).points)} pts`;
   const feedback=$('#quiz-feedback');feedback.className=`quiz-feedback ${answer.correct?'good':'bad'}`;

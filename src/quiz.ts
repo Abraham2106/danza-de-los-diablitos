@@ -73,6 +73,8 @@ export const isUnlocked = (section: number, seen: ReadonlySet<string>): boolean 
 
 export interface Answer {
   question: number;
+  /** The option picked (0–3), or -1 when time ran out. The server recomputes points from it. */
+  choice: number;
   correct: boolean;
   /** Milliseconds from the options appearing to the answer. */
   ms: number;
@@ -97,7 +99,7 @@ export function makeAnswer(question: number, choice: number, elapsedMs: number):
   const q = QUESTIONS[question];
   const correct = choice === q.answer;
   const ms = choice < 0 ? QUESTION_TIME : Math.min(QUESTION_TIME, Math.max(0, elapsedMs));
-  return {question, correct, ms, speed: choice < 0 ? 0 : speedOf(ms),
+  return {question, choice, correct, ms, speed: choice < 0 ? 0 : speedOf(ms),
     points: scoreAnswer(correct, ms, SECTIONS[q.section].multiplier)};
 }
 

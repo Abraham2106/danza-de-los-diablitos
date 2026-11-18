@@ -13,7 +13,7 @@ npm run build
 npm run dev
 ```
 
-`npm run preview` sirve la compilación de `dist`. El proyecto debe abrirse mediante HTTP, no haciendo doble clic en `index.html`.
+`npm run preview` sirve la compilación de `dist`. Para probar la parte en línea (anfitrión y resultados) se usa además `npm run dev:api`: ver [docs/ONLINE.md](docs/ONLINE.md). El proyecto debe abrirse mediante HTTP, no haciendo doble clic en `index.html`.
 
 ## Desplegar en Vercel
 

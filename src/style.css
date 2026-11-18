@@ -362,6 +362,44 @@ dialog::backdrop{background:#1f285999;-webkit-backdrop-filter:blur(6px);backdrop
 .quiz-levels b{font:800 22px/1 var(--display)}
 .quiz-levels span{font:700 14px/1 var(--ui);color:var(--suave)}
 
+
+/* Online: waiting room, host panel and live ranking */
+.join-wait{display:flex;align-items:center;gap:10px;margin:12px 0 0 8px;font:600 15.5px/1.4 var(--ui);color:var(--anil)}
+.join-wait::before{content:'';flex:none;width:18px;height:18px;border-radius:50%;border:3px solid #3547b833;border-top-color:var(--anil);animation:gira .9s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.host-link{margin-left:auto;display:inline-flex;align-items:center;gap:6px;color:var(--tenue)}
+.host-link svg{width:15px;height:15px}
+.host-dialog{width:min(860px,calc(100vw - 32px))}
+.host-lede{max-width:46ch;font:400 19px/1.55 var(--cronica);color:var(--texto)}
+.host-code{display:block;width:min(260px,100%);margin:22px 0 0;padding:14px 18px;border-radius:999px;border:2px solid var(--linea);background:#fff;text-align:center;font:800 32px/1 var(--display);letter-spacing:.35em;color:var(--tinta);outline:none;transition:border-color .2s,box-shadow .2s}
+.host-code:focus{border-color:var(--anil);box-shadow:0 0 0 5px #3547b826}
+.host-code::placeholder{letter-spacing:.35em;color:var(--tenue);font-weight:500}
+.host-note{margin-top:14px;max-width:62ch;font:600 15.5px/1.45 var(--ui);color:var(--suave)}
+.host-note.is-error{color:var(--achiote-hondo)}
+.host-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.host-state{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:var(--arena);font:700 16px/1 var(--ui);color:var(--tinta)}
+.host-state::before{content:'';flex:none;width:10px;height:10px;border-radius:50%;background:var(--tenue)}
+.host-state.is-open::before{background:var(--selva);box-shadow:0 0 0 4px #2fa36b33}
+.host-state.is-closed::before{background:var(--achiote)}
+.host-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.button.danger{background:var(--achiote-hondo);border-color:var(--achiote-hondo);color:#fff;box-shadow:0 4px 0 #7f2412}
+.button.danger:hover{background:#c8401f;border-color:#c8401f}
+.host-empty{margin-top:18px;padding:22px;border-radius:22px;background:var(--arena);font:500 16.5px/1.5 var(--ui);color:var(--suave);text-align:center}
+.rank-list{display:grid;gap:8px;margin:18px 0 0;padding:0;list-style:none;max-height:min(52dvh,520px);overflow:auto}
+.rank-row{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:14px;padding:12px 16px;border-radius:22px;background:#fff;box-shadow:0 2px 0 var(--linea)}
+.rank-n{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--arena);font:800 15px/1 var(--display);color:var(--tinta)}
+.rank-row.top-1 .rank-n{background:var(--sol)}
+.rank-row.top-2 .rank-n{background:#d9dcec}
+.rank-row.top-3 .rank-n{background:#f0c9a8}
+.rank-who{display:flex;flex-direction:column;gap:3px;min-width:0}
+.rank-name{font:700 18px/1.2 var(--ui);color:var(--tinta);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-meta{font:600 13.5px/1.2 var(--ui);color:var(--suave)}
+.rank-levels{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.lv{font-style:normal;padding:5px 9px 4px;border-radius:999px;font:700 12.5px/1 var(--ui);color:#fff;white-space:nowrap}
+.lv1{background:var(--anil)}.lv2{background:var(--caracol)}.lv3{background:var(--achiote)}
+.lv.is-empty{background:var(--arena);color:var(--tenue)}
+.rank-points{min-width:5ch;text-align:right;font:800 22px/1 var(--display);letter-spacing:-.02em;color:var(--tinta)}
+
 /* ——— Responsive ——— */
 @media(max-width:1100px){
   .walk-hint>span:nth-child(3){display:none}
@@ -391,6 +429,9 @@ dialog::backdrop{background:#1f285999;-webkit-backdrop-filter:blur(6px);backdrop
   .detail-dialog[data-mode=reading] .detail-image{min-height:0;height:auto}
 }
 @media(max-width:760px){
+  .rank-row{grid-template-columns:auto 1fr auto;gap:10px}
+  .rank-levels{display:none}
+  .host-actions .button{flex:1}
   .topbar{top:10px;left:10px;right:10px}
   .brand{padding:6px 12px 6px 8px;gap:10px}
   .brand-meta{display:none}

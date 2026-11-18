@@ -1,0 +1,18 @@
+{
+  // One Worker serves the built museum (dist/) and the /api used by the class activity.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "danza-de-los-diablitos",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // Only /api/* runs the Worker; everything else is served straight from dist/.
+    "run_worker_first": ["/api/*"]
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "GAME", "class_name": "GameRoom" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["GameRoom"] }],
+  "observability": { "enabled": true }
+  // HOST_CODE is a secret and is deliberately NOT here: `npx wrangler secret put HOST_CODE`.
+}

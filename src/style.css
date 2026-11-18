@@ -499,7 +499,7 @@ dialog::backdrop{background:#1f285999;-webkit-backdrop-filter:blur(6px);backdrop
 .c-achiote{--c:var(--achiote);--soft:#fde7e0}
 .c-sol{--c:var(--sol);--soft:#fff1cc}
 .c-selva{--c:var(--selva);--soft:#dff3e8}
-.tcard-scene{position:relative;flex:1 1 0;min-height:130px;overflow:hidden;background:var(--soft)}
+.tcard-scene{position:relative;flex:1 1 0;min-height:130px;overflow:hidden;background:var(--soft);will-change:transform;backface-visibility:hidden}
 .tcard-body{padding:16px 26px 24px;transition:opacity .3s}
 .tcard:not(.is-current) .tcard-body{opacity:0}
 .t-step{display:inline-block;padding:6px 12px 5px;border-radius:999px;background:var(--c);color:#fff;font:700 12.5px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase}
@@ -523,11 +523,12 @@ dialog::backdrop{background:#1f285999;-webkit-backdrop-filter:blur(6px);backdrop
 .t-load{position:relative;z-index:3;margin-top:12px;min-height:1em;font:600 14px/1 var(--ui);color:#ffffffb0;text-align:center}
 /* 1 · the museum */
 .ts-museum{position:absolute;inset:0}
-.ts-museum img{display:block;width:100%;height:100%;object-fit:cover;transform-origin:34% 52%}
-.tcard.is-current .ts-museum img{animation:t-zoom 9s ease-in-out infinite alternate}
-@keyframes t-zoom{from{transform:scale(1)}to{transform:scale(1.12) translate(-1.5%,0)}}
+.ts-museum img{display:block;width:100%;height:100%;object-fit:cover;transform-origin:34% 52%;will-change:transform;backface-visibility:hidden;transform:translate3d(0,0,0) scale(1)}
+.tcard.is-current .ts-museum img{animation:t-zoom 14s ease-in-out infinite alternate}
+@keyframes t-zoom{from{transform:translate3d(0,0,0) scale3d(1,1,1)}to{transform:translate3d(-1.2%,0,0) scale3d(1.1,1.1,1)}}
 .ts-drag{position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#fff9efe8;color:var(--tinta);font:700 14px/1 var(--ui);box-shadow:0 6px 16px #0a0f4a33}
 .ts-drag i{display:inline-block;font-style:normal;font-weight:800}
+.ts-drag i{will-change:transform}
 .tcard.is-current .ts-drag i{animation:t-arrastra 1.4s ease-in-out infinite alternate}
 @keyframes t-arrastra{from{transform:translateX(-5px)}to{transform:translateX(5px)}}
 .ts-keys{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,42px);grid-template-areas:". w ." "a s d";gap:6px}

@@ -4,6 +4,7 @@
  */
 import {api,type HostResults} from './api';
 import {SECTIONS,QUESTIONS} from './quiz';
+import {showPodium} from './podium';
 import type {Row} from '../worker/game';
 
 const KEY='diablitos.host';
@@ -66,9 +67,10 @@ export function mountHost(body:HTMLElement):HostPanel{
     const top=el('div','host-top');const state=el('p','host-state');state.setAttribute('role','status');
     const actions=el('div','host-actions');
     const main=el('button','button primary host-main');main.type='button';
+    const podiumButton=el('button','button');podiumButton.type='button';podiumButton.textContent='Ver podio';
     const csv=el('button','button');csv.type='button';csv.textContent='Descargar resultados';
     const leave=el('button','text-button');leave.type='button';leave.textContent='Cerrar sesión de host';
-    actions.append(main,csv,leave);top.append(state,actions);
+    actions.append(main,podiumButton,csv,leave);top.append(state,actions);
     const note=el('p','host-note');
     const list=el('ol','rank-list');list.setAttribute('aria-label','Ranking en vivo');
     const empty=el('p','host-empty','Todavía no hay jugadores. Cuando inicies la partida, los estudiantes aparecerán aquí en vivo.');
@@ -88,7 +90,7 @@ export function mountHost(body:HTMLElement):HostPanel{
       note.className='host-note';
       note.textContent=open?'Los estudiantes ya pueden entrar con su nombre. Al terminar, dejan de sumar puntos y los resultados se conservan.'
         :count?'Los resultados de la última partida se conservan 2 días. Si inicias otra, se reemplazan: descárgalos antes.':'Al iniciar, los estudiantes podrán entrar con su nombre desde su computadora.';
-      csv.hidden=!count;empty.hidden=count>0;
+      csv.hidden=!count;podiumButton.hidden=!(results.game?.status==='closed'&&count>0);empty.hidden=count>0;
       list.replaceChildren(...results.players.map(rowItem));
     }
     async function refresh():Promise<void>{
@@ -108,9 +110,16 @@ export function mountHost(body:HTMLElement):HostPanel{
       pending=false;
       if(!result.ok){note.className='host-note is-error';note.textContent=result.offline?OFFLINE:result.message;if(result.status===401){token=undefined;sessionSet();login('Tu sesión de anfitrión terminó. Vuelve a escribir el código.','info');}return;}
       await refresh();
+      // Ending the game shows the podium on the host's screen too (usually the projector).
+      if(open)await showFinalPodium();
     });
     csv.addEventListener('click',()=>{if(latest)download(`resultados-diablitos-${new Date().toISOString().slice(0,10)}.csv`,resultsCsv(latest));});
     leave.addEventListener('click',()=>{token=undefined;sessionSet();login();});
+    async function showFinalPodium():Promise<void>{
+      const result=await api.podium(token);
+      if(result.ok)showPodium(result.data);else{note.className='host-note is-error';note.textContent=result.offline?OFFLINE:result.message;}
+    }
+    podiumButton.addEventListener('click',()=>void showFinalPodium());
     state.textContent='Conectando…';
     await refresh();
     if(token)timer=window.setInterval(()=>void refresh(),3000);

@@ -1,5 +1,5 @@
 import {describe,it,expect,beforeEach} from 'vitest';
-import {GameService,emptyState,sanitizeName,safeEqual,leaderboard,MAX_PLAYERS,RETENTION_MS,HOST_TOKEN_TTL,IP_FAILS,GLOBAL_FAILS,LOGIN_WINDOW,type State,type Store} from '../worker/game';
+import {GameService,emptyState,sanitizeName,safeEqual,leaderboard,MAX_PLAYERS,PODIUM_SIZE,RETENTION_MS,HOST_TOKEN_TTL,IP_FAILS,GLOBAL_FAILS,LOGIN_WINDOW,type State,type Store} from '../worker/game';
 import {QUESTIONS,SECTIONS,QUESTION_TIME,questionsOf} from '../src/quiz';
 
 class MemoryStore implements Store{
@@ -189,5 +189,53 @@ describe('Conservación de los resultados',()=>{
     const again=await hostToken();await service.hostEnd(again);
     now+=RETENTION_MS-1000;expect(await service.sweep()).toBe(false);
     now+=1001;expect(await service.sweep()).toBe(true);
+  });
+});
+
+describe('Podio final',()=>{
+  async function playedGame(count:number){
+    const host=await openGame();const tokens:string[]=[];
+    for(let i=0;i<count;i++){
+      const token=(await service.join(`Jugador ${i+1}`,undefined)).body.token as string;tokens.push(token);
+      // Player 1 answers best, the last player answers worst: a clear order.
+      const [q]=questionsOf(0);
+      await service.score(token,[{question:q,choice:i===count-1?(right(q)+1)%4:right(q),ms:i*1000}]);
+    }
+    return {host,tokens};
+  }
+  it('no se muestra mientras la partida sigue abierta ni antes de empezar',async()=>{
+    expect((await service.podium(undefined)).status).toBe(409);
+    await openGame();
+    expect((await service.podium(undefined)).status).toBe(409);
+  });
+  it('al terminar, cualquiera ve los cinco primeros con nombre y puntos, sin sesiones',async()=>{
+    const {host}=await playedGame(8);await service.hostEnd(host);
+    const reply=await service.podium(undefined);
+    expect(reply.status).toBe(200);
+    const finalists=reply.body.finalists as {rank:number;name:string;points:number}[];
+    expect(finalists).toHaveLength(PODIUM_SIZE);
+    expect(finalists.map(f=>f.rank)).toEqual([1,2,3,4,5]);
+    expect(finalists[0].name).toBe('Jugador 1');
+    expect(finalists[0].points).toBeGreaterThan(finalists[1].points);
+    expect(reply.body.total).toBe(8);expect(reply.body.me).toBeNull();
+    expect(JSON.stringify(reply.body)).not.toContain('token');
+    expect(JSON.stringify(reply.body)).not.toContain('Jugador 6');
+  });
+  it('a quien manda su sesión le devuelve su propio puesto, incluso fuera del podio',async()=>{
+    const {host,tokens}=await playedGame(8);await service.hostEnd(host);
+    const last=await service.podium(tokens[7]);
+    expect(last.body.me).toMatchObject({rank:8,total:8,points:0});
+    const first=await service.podium(tokens[0]);
+    expect(first.body.me).toMatchObject({rank:1,total:8});
+    expect((await service.podium('falso')).body.me).toBeNull();
+  });
+  it('con menos de cinco jugadores muestra solo a los que hay',async()=>{
+    const {host}=await playedGame(2);await service.hostEnd(host);
+    expect(((await service.podium(undefined)).body.finalists as unknown[]).length).toBe(2);
+  });
+  it('sin jugadores devuelve una lista vacía',async()=>{
+    const host=await openGame();await service.hostEnd(host);
+    const reply=await service.podium(undefined);
+    expect(reply.status).toBe(200);expect(reply.body.finalists).toEqual([]);expect(reply.body.total).toBe(0);
   });
 });

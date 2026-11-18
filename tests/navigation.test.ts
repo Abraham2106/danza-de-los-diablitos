@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import type {Navigation} from '../src/data';
-import {canStand,clearPath,moveSafely,safeObservation} from '../src/navigation';
+import {VISITOR_RADIUS,canStand,clearPath,moveSafely,safeObservation} from '../src/navigation';
 const navigation=(overrides:Partial<Navigation>={}):Navigation=>({boxes:[],circles:[],walkable:[{x1:-10,x2:10,z1:-10,z2:10}],spawn:{position:[0,1.65,0],yaw:0},...overrides});
 describe('Recorrido seguro',()=>{
   it('mantiene el radio del visitante dentro de una sala',()=>{const nav=navigation();expect(canStand({x:9.9,z:0},nav)).toBe(false);expect(canStand({x:9.5,z:0},nav)).toBe(true);});
   it('permite cruzar una puerta compartida entre salas sin margen artificial',()=>{const nav=navigation({walkable:[{x1:-10,x2:0,z1:-6,z2:6},{x1:0,x2:10,z1:-3,z2:3}]});expect(canStand({x:0,z:0},nav)).toBe(true);expect(canStand({x:0,z:4},nav)).toBe(false);});
   it('impide atravesar un panel fino incluso con un desplazamiento largo',()=>{const nav=navigation({boxes:[{minX:-.05,maxX:.05,minZ:-5,maxZ:5}]});const point=moveSafely({x:-2,z:0},6,0,nav);expect(point.x).toBeLessThan(-.33);expect(canStand(point,nav)).toBe(true);});
+  it('a velocidad de carrera ningún paso fijo supera el radio y no cruza un panel fino',()=>{
+    const RUN_SPEED=6,step=1/120;expect(RUN_SPEED*step).toBeLessThan(VISITOR_RADIUS);
+    const nav=navigation({boxes:[{minX:-.02,maxX:.02,minZ:-5,maxZ:5}]});let point={x:-3,z:0};
+    for(let i=0;i<120*2;i++)point=moveSafely(point,RUN_SPEED*step,0,nav);
+    expect(point.x).toBeLessThan(-.33);expect(canStand(point,nav)).toBe(true);
+  });
   it('permite deslizarse junto a una pared',()=>{const nav=navigation({boxes:[{minX:0,maxX:1,minZ:-5,maxZ:5}]});const point=moveSafely({x:-.4,z:0},1,2,nav);expect(point.x).toBeLessThan(0);expect(point.z).toBeGreaterThan(1.8);});
   it('detecta el cuerpo de una columna y el radio del visitante',()=>{const nav=navigation({circles:[{x:0,z:0,r:.5}]});expect(canStand({x:.7,z:0},nav)).toBe(false);expect(canStand({x:.9,z:0},nav)).toBe(true);});
   it('aplica la orientación de un panel a 45 grados',()=>{const nav=navigation({orientedBoxes:[{x:0,z:0,width:6,depth:.12,rotation:Math.PI/4}]});expect(canStand({x:1.5,z:1.5},nav)).toBe(false);expect(canStand({x:1.5,z:-1.5},nav)).toBe(true);expect(clearPath({x:-2,z:2},{x:2,z:-2},nav)).toBe(false);});

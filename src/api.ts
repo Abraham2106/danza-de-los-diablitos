@@ -10,6 +10,8 @@ export interface GameStatus{open:boolean;gameId?:string;players:number;max:numbe
 export interface HostResults{game:{id:string;status:'open'|'closed';startedAt:number;endedAt?:number}|null;max:number;players:Row[];retentionMs:number}
 export interface Joined{playerId:string;token:string;name:string;gameId:string}
 export interface ScoreReply{points:number;answered:number;rank:number;total:number}
+export interface Finalist{rank:number;name:string;points:number;answered:number;correct:number}
+export interface Podium{gameId:string;total:number;finalists:Finalist[];me:{rank:number;total:number;points:number;answered:number;correct:number}|null}
 export interface RawAnswer{question:number;choice:number;ms:number}
 
 export type ApiResult<T>={ok:true;data:T}|{ok:false;offline:boolean;status:number;error:string;message:string;retryAfterMs?:number;attemptsLeft?:number};
@@ -41,6 +43,7 @@ export const api={
   hostStart:(token:string)=>call<{game:NonNullable<HostResults['game']>}>('POST','/api/host/start',{},token),
   hostEnd:(token:string)=>call<{game:NonNullable<HostResults['game']>}>('POST','/api/host/end',{},token),
   hostResults:(token:string)=>call<HostResults>('GET','/api/host/results',undefined,token),
+  podium:(token?:string)=>call<Podium>('GET','/api/podium',undefined,token),
   join:(name:string,token?:string)=>call<Joined>('POST','/api/join',{name,token}),
   score:(token:string,answers:RawAnswer[])=>call<ScoreReply>('POST','/api/score',{answers},token),
 };

@@ -34,6 +34,7 @@ export class GameRoom extends DurableObject<Env>{
   hostStart(token:string|undefined):Promise<Reply>{return this.service.hostStart(token);}
   hostEnd(token:string|undefined):Promise<Reply>{return this.service.hostEnd(token);}
   hostResults(token:string|undefined):Promise<Reply>{return this.service.hostResults(token);}
+  podium(token:string|undefined):Promise<Reply>{return this.service.podium(token);}
   join(name:unknown,token:string|undefined):Promise<Reply>{return this.service.join(name,token);}
   score(token:string|undefined,answers:unknown):Promise<Reply>{return this.service.score(token,answers);}
   async alarm():Promise<void>{await this.service.sweep();}
@@ -64,7 +65,7 @@ export default {
     const route=`${request.method} ${url.pathname.replace(/\/+$/,'')}`;
     try{
       if(route==='GET /api/game')return send(await room.status());
-      const known=['POST /api/host/login','POST /api/host/start','POST /api/host/end','GET /api/host/results','POST /api/join','POST /api/score'];
+      const known=['POST /api/host/login','POST /api/host/start','POST /api/host/end','GET /api/host/results','GET /api/podium','POST /api/join','POST /api/score'];
       if(!known.includes(route))return problem(known.some(r=>r.endsWith(url.pathname))?405:404,'no_encontrado','Ruta no encontrada.');
       const body=request.method==='POST'?await readJson(request):{};
       if(!body)return problem(400,'datos_invalidos','El cuerpo de la petición no es válido.');
@@ -73,6 +74,7 @@ export default {
         case 'POST /api/host/start':return send(await room.hostStart(bearer(request)));
         case 'POST /api/host/end':return send(await room.hostEnd(bearer(request)));
         case 'GET /api/host/results':return send(await room.hostResults(bearer(request)));
+        case 'GET /api/podium':return send(await room.podium(bearer(request)));
         case 'POST /api/join':return send(await room.join(body.name,typeof body.token==='string'?body.token:undefined));
         case 'POST /api/score':return send(await room.score(bearer(request),body.answers));
       }

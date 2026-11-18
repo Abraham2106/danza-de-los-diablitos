@@ -8,7 +8,8 @@ La galería y el reto se ejecutan en la computadora de cada estudiante. Lo únic
 2. En el panel toca **Iniciar partida**. Hasta que lo haga, nadie puede entrar: los estudiantes ven «Esperando a que el anfitrión inicie la partida…» y entran solos en cuanto se abre.
 3. Cada estudiante escribe su nombre y recorre el museo. Al responder, su puntaje se envía al servidor y aparece **en vivo** en el panel: puesto, puntos, preguntas respondidas, rapidez media y cuántas acertó en cada nivel (fácil, intermedio, difícil).
 4. El anfitrión toca **Terminar partida**. Los estudiantes dejan de sumar puntos y los resultados quedan guardados.
-5. **Descargar resultados** genera un CSV que abre bien en Excel.
+5. **A todos les aparece el podio**, en el anfitrión y en cada estudiante, a los pocos segundos: primero el tercer lugar, luego el segundo y, tras un redoble de suspenso, el primero, con corona de plumas, rayos y confeti. Después aparecen el cuarto y el quinto en gris, y cada estudiante ve su propio puesto («Quedaste en el puesto 7 de 28»). El botón **Saltar animación** muestra el resultado de inmediato, y con la opción de reducir movimiento del sistema se muestra sin animaciones.
+6. **Ver podio** (en el panel del anfitrión) repite la animación, por ejemplo para proyectarla; **Descargar resultados** genera un CSV que abre bien en Excel.
 
 Los botones de iniciar y terminar piden un segundo toque de confirmación para que no se pulsen sin querer. Iniciar una partida nueva reemplaza los resultados de la anterior; el panel avisa y conviene descargarlos antes.
 
@@ -22,6 +23,7 @@ Los botones de iniciar y terminar piden un segundo toque de confirmación para q
 | Sesión del anfitrión | Dura 12 horas y vive solo en esa pestaña del navegador. |
 | Entrar | Solo con una partida abierta. Nombres sin repetir (se ignoran mayúsculas y tildes), hasta 24 caracteres, sin etiquetas. Máximo 40 jugadores. |
 | Puntajes | El estudiante envía **respuestas**, no puntos. El servidor recalcula cada puntaje con las mismas reglas del reto, así que no se pueden inventar. Cada pregunta cuenta una sola vez. |
+| Podio | Solo existe cuando la partida termina y solo muestra a los cinco primeros (nombre y puntos). Nadie ve resultados ajenos mientras se juega. |
 | Reconexión | Si el estudiante recarga la página, vuelve a su mismo puesto con su nombre. |
 | Conservación | Los resultados se borran solos **2 días** después de la última actividad. |
 

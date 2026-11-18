@@ -18,7 +18,8 @@ import {addArtworkLabels} from './labels';
 import {replaceFurnishings} from './furnishings';
 import {QUESTIONS,SECTIONS,SECTION_SIZE,QUESTION_TIME,READ_TIME,MAX_POINTS,isUnlocked,seenInSection,sectionOfPhoto,questionsOf,pendingQuestions,makeAnswer,summarize,verdict,type Answer,type Answers,type Level} from './quiz';
 import {ROOMS,roomOf,type RoomKey} from './rooms';
-import {api,type RawAnswer} from './api';
+import {api,type RawAnswer,type Podium} from './api';
+import {showPodium} from './podium';
 import {mountHost} from './host';
 
 const icons = {
@@ -145,6 +146,7 @@ app.innerHTML = `
     </dl>
     <p class="guide-credit">Fotografías y crónica: Alonso Solano / El Observador · ©PerroMudo.</p>
   </div></dialog>
+  <dialog class="podium-dialog" id="podium-dialog" aria-label="Resultado final"></dialog>
   <dialog class="host-dialog" id="host-dialog" aria-labelledby="host-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker">Solo anfitrión</p><h2 id="host-title">Panel del anfitrión</h2></div><button class="icon-button" data-close aria-label="Cerrar panel">${svg('close')}</button></div><div class="dialog-body" id="host-body"></div></dialog>
   <dialog class="quiz-dialog" id="quiz-dialog" aria-labelledby="quiz-title"><div class="faja faja-thin" aria-hidden="true"></div><div class="dialog-header"><div><p class="kicker" id="quiz-kicker">El reto</p><h2 id="quiz-title" class="sr-only">El reto</h2></div><button class="icon-button" data-close aria-label="Cerrar el reto">${svg('close')}</button></div><div class="dialog-body" id="quiz-body"></div></dialog>
   <dialog class="catalog-dialog" id="catalog-dialog" aria-labelledby="catalog-title"><div class="dialog-header"><div><p class="kicker">Catálogo · 12 fotografías</p><h2 id="catalog-title">Fotografías del baile</h2></div><button class="icon-button" data-close aria-label="Cerrar fotografías">${svg('close')}</button></div><div class="dialog-body"><div id="catalog-grid"></div></div></dialog>
@@ -507,6 +509,26 @@ $<HTMLFormElement>('#join-form').addEventListener('submit',event=>{
 let syncing=false,syncAgain=false,syncRetries=0;
 function setRank(rank?:number,total?:number):void{$('#points-label').textContent=rank?`puntos · puesto ${rank}/${total}`:'puntos';}
 function endOnline(message:string):void{toast(message);online=undefined;saveOnline();setRank();}
+/** The host ended the game: every player sees the final podium once. */
+const finishedGames=new Set<string>();
+function showFinal(data:Podium):void{
+  promptSection=undefined;
+  for(const dialog of dialogs)if(dialog.open&&dialog.id!=='host-dialog'&&dialog.id!=='podium-dialog')dialog.close();
+  showPodium(data);
+}
+async function presentFinal(session:Online):Promise<void>{
+  if(finishedGames.has(session.gameId))return;finishedGames.add(session.gameId);
+  const result=await api.podium(session.token);
+  if(online?.gameId===session.gameId){online=undefined;saveOnline();setRank();}
+  if(result.ok)showFinal(result.data);else toast('El anfitrión terminó la partida. Tus resultados quedaron guardados.');
+}
+/** Students find out the game ended by asking every few seconds; it is a tiny request. */
+async function watchForEnd():Promise<void>{
+  const session=online;if(!session||finishedGames.has(session.gameId))return;
+  const status=await api.status();
+  if(status.ok&&!status.data.open&&status.data.gameId===session.gameId)await presentFinal(session);
+}
+setInterval(()=>void watchForEnd(),4000);
 async function syncScore():Promise<void>{
   if(!online)return;
   if(syncing){syncAgain=true;return;}
@@ -518,7 +540,7 @@ async function syncScore():Promise<void>{
       if(!list.length)break;
       const result=await api.score(session.token,list);
       if(result.ok){syncRetries=0;setRank(result.data.rank,result.data.total);}
-      else if(result.error==='partida_terminada')endOnline('El anfitrión terminó la partida. Tus resultados quedaron guardados.');
+      else if(result.error==='partida_terminada')void presentFinal(session);
       else if(result.error==='sesion_invalida')endOnline('Tu sesión en la partida ya no existe. Vuelve a la portada para entrar de nuevo.');
       else if(result.offline&&syncRetries<5){syncRetries++;window.setTimeout(()=>void syncScore(),8000*syncRetries);}
     }while(syncAgain&&online);
@@ -553,7 +575,7 @@ function pickArtwork(x: number,y: number): Artwork|undefined {
 }
 canvas.addEventListener('pointerdown',event=>{if(event.button!==0||uiBlocked()||moving)return;canvas.focus();dragging={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,moved:0};canvas.setPointerCapture(event.pointerId);canvas.classList.add('grabbing');});
 canvas.addEventListener('pointermove',event=>{
-  if(dragging){const dx=event.clientX-dragging.x,dy=event.clientY-dragging.y;dragging.moved+=Math.abs(dx)+Math.abs(dy);yaw-=dx*.0045;pitch=THREE.MathUtils.clamp(pitch-dy*.0035,-1.1,1.1);dragging.x=event.clientX;dragging.y=event.clientY;invalidate();}
+  if(dragging){const dx=event.clientX-dragging.x,dy=event.clientY-dragging.y;dragging.moved+=Math.abs(dx)+Math.abs(dy);yaw-=dx*DRAG_YAW;pitch=THREE.MathUtils.clamp(pitch-dy*.0035,-1.1,1.1);dragging.x=event.clientX;dragging.y=event.clientY;invalidate();}
   else if(!moving){pendingHover={x:event.clientX,y:event.clientY};frames.request();}
 });
 canvas.addEventListener('pointerup',event=>{if(dragging)setCamera();if(dragging&&dragging.moved<6){const artwork=pickArtwork(event.clientX,event.clientY);if(artwork)showArtwork(artwork);}dragging=null;canvas.classList.remove('grabbing');if(canvas.hasPointerCapture(event.pointerId))canvas.releasePointerCapture(event.pointerId);});
@@ -820,6 +842,11 @@ function drawMinimap():void{
   mapDirty=false;
 }
 
+// Movement tuning. Per fixed step (1/120 s) the visitor moves at most RUN_SPEED/120 m, far below the collision radius.
+const WALK_SPEED=3.5;   // metres per second (was 2.3)
+const RUN_SPEED=6;      // metres per second with Shift (was 4.2)
+const TURN_SPEED=2.5;   // radians per second for Q/E (was 1.7)
+const DRAG_YAW=.0065;   // radians per pixel when dragging the mouse (was .0045)
 let previousTime=0,accumulator=0,lastMap=0;
 function loop(time:number):boolean{
   if(!renderer||!geometryLoaded||!visiting||document.hidden){previousTime=0;accumulator=0;return false;}
@@ -834,8 +861,8 @@ function loop(time:number):boolean{
       if(!uiBlocked()&&!moving){
         const forward=(keys.has('KeyW')||keys.has('ArrowUp')?1:0)-(keys.has('KeyS')||keys.has('ArrowDown')?1:0);
         const sideways=(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0);
-        const turn=(keys.has('KeyQ')?1:0)-(keys.has('KeyE')?1:0);yaw+=turn*1.7*step;
-        const speed=keys.has('ShiftLeft')||keys.has('ShiftRight')?4.2:2.3;const length=Math.max(1,Math.hypot(forward,sideways));
+        const turn=(keys.has('KeyQ')?1:0)-(keys.has('KeyE')?1:0);yaw+=turn*TURN_SPEED*step;
+        const speed=keys.has('ShiftLeft')||keys.has('ShiftRight')?RUN_SPEED:WALK_SPEED;const length=Math.max(1,Math.hypot(forward,sideways));
         const dx=(-Math.sin(yaw)*forward+Math.cos(yaw)*sideways)/length*speed*step,dz=(-Math.cos(yaw)*forward-Math.sin(yaw)*sideways)/length*speed*step;
         if(dx||dz)point=moveSafely(point,dx,dz,exhibition.navigation);
       }

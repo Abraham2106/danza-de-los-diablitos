@@ -8,6 +8,8 @@ import {QUESTIONS,QUESTION_TIME,makeAnswer,summarize,type Answers,type Summary} 
 
 export const MAX_PLAYERS=40;
 export const NAME_MAX=24;
+/** How many places the final screen shows: three on the podium and two more below it. */
+export const PODIUM_SIZE=5;
 export const HOST_TOKEN_TTL=12*3600_000;
 /** Results disappear this long after the last activity. */
 export const RETENTION_MS=48*3600_000;
@@ -133,6 +135,21 @@ export class GameService{
     const state=await this.store.load();
     if(!this.hostOk(state,token))return fail(401,'no_autorizado','Vuelve a entrar como anfitrión.');
     return reply(200,{ok:true,game:state.game??null,max:MAX_PLAYERS,players:leaderboard(state),retentionMs:RETENTION_MS});
+  }
+
+  /**
+   * The final podium, visible to every player once the host ends the game: only the first five names and
+   * points, plus (for a player who sends their session token) their own place. Never available while playing.
+   */
+  async podium(token:string|undefined):Promise<Reply>{
+    const state=await this.store.load();
+    if(state.game?.status!=='closed')return fail(409,'sin_resultados','Los resultados finales aparecen cuando el anfitrión termina la partida.');
+    const table=leaderboard(state);
+    const player=token?Object.values(state.players).find(p=>p.token===token):undefined;
+    const mine=player?table.find(row=>row.id===player.id):undefined;
+    return reply(200,{ok:true,gameId:state.game.id,total:table.length,
+      finalists:table.slice(0,PODIUM_SIZE).map(row=>({rank:row.rank,name:row.name,points:row.points,answered:row.answered,correct:row.correct})),
+      me:mine?{rank:mine.rank,total:table.length,points:mine.points,answered:mine.answered,correct:mine.correct}:null});
   }
 
   async join(rawName:unknown,token:string|undefined):Promise<Reply>{

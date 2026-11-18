@@ -3,6 +3,9 @@ import {Reflector} from 'three/addons/objects/Reflector.js';
 import type {Navigation} from './data';
 
 export interface ReflectionController {setReduced(reduced:boolean):void;}
+// A throttled capture lags the camera and leaves a ghost trail that reads as motion blur,
+// so reflections refresh on every changed frame; only the explicit low-quality mode throttles.
+const REDUCED_CAPTURE_INTERVAL_MS=66;
 type Rectangle={x1:number;x2:number;z1:number;z2:number};
 
 // Subtract overlaps before drawing translucent floor patches, avoiding doubled seams.
@@ -92,7 +95,7 @@ export function addPlanarReflections(model:THREE.Group,scene:THREE.Scene,nav:Nav
     resetCaptures.push(()=>{captured=false;lastTime=-Infinity;});
     reflector.onBeforeRender=(renderer,currentScene,camera,geometry,material,group)=>{
       const now=performance.now();
-      if((captured&&previousWorld.equals(camera.matrixWorld)&&previousProjection.equals(camera.projectionMatrix))||now-lastTime<(reduced?66:30))return;
+      if((captured&&previousWorld.equals(camera.matrixWorld)&&previousProjection.equals(camera.projectionMatrix))||now-lastTime<(reduced?REDUCED_CAPTURE_INTERVAL_MS:0))return;
       // A shared plane's bounding sphere can span rooms and the gap between them.
       // Only skip its capture when every actual surface is outside the frustum.
       frustum.setFromProjectionMatrix(clipMatrix.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));

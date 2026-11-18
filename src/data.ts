@@ -8,6 +8,8 @@ export interface Artwork {
   id: string; title: string; artist: string; year: string; description: string; source: string;
   image: string; imageUrl?: string; position: Vec3; rotation: number; width: number; height: number; frame: string;
   observation: {position: Vec3; yaw: number};
+  guide?: {context:string;observe:string;next:string};
+  narration?: {src:string;language:string};
 }
 export interface Exhibition {
   schemaVersion: 1; title: string; subtitle: string; source: string; model: string;
@@ -45,6 +47,8 @@ export function parseExhibition(value: unknown): Exhibition {
       || !localResource(artwork.image) || !vector(artwork.position) || !finite(artwork.rotation)
       || !finite(artwork.width) || !finite(artwork.height) || artwork.width <= 0 || artwork.height <= 0
       || !isObject(artwork.observation) || !vector(artwork.observation.position) || !finite(artwork.observation.yaw)) throw new Error('Los datos de una obra están incompletos o repetidos.');
+    if(artwork.guide!==undefined&&(!isObject(artwork.guide)||![artwork.guide.context,artwork.guide.observe,artwork.guide.next].every(string)))throw new Error('El texto de una parada está incompleto.');
+    if(artwork.narration!==undefined&&(!isObject(artwork.narration)||!localResource(artwork.narration.src)||!string(artwork.narration.language)))throw new Error('El audio de una parada no es válido.');
     ids.add(artwork.id);
   }
   return value as unknown as Exhibition;

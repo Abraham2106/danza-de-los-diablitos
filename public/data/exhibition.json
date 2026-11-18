@@ -29,6 +29,11 @@
           6.645
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "Comenzamos en las calles de Boruca. Este encuentro entre el toro y los diablitos introduce la representación de la conquista y la resistencia que atraviesa toda la celebración.",
+        "observe": "Mira la cercanía entre los participantes y el toro, y cómo los tejidos y las máscaras distinguen a cada persona.",
+        "next": "En la siguiente fotografía nos detenemos en el diablito mayor, una figura de referencia dentro del baile."
       }
     },
     {
@@ -55,6 +60,15 @@
           6.645
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "Después del encuentro con el toro, nos acercamos a uno de los participantes. El diablito mayor nos permite pasar de la escena colectiva a las personas que mantienen viva la ceremonia.",
+        "observe": "Observa la expresión tallada de la máscara y cómo las plumas y el tejido acompañan su movimiento.",
+        "next": "Desde esta figura, continuamos hacia los animales que aparecen en las máscaras."
+      },
+      "narration": {
+        "src": "audio/diablo-mayor-es.mp3",
+        "language": "es"
       }
     },
     {
@@ -81,6 +95,11 @@
           6.3
         ],
         "yaw": -1.5707963267948966
+      },
+      "guide": {
+        "context": "Las máscaras reúnen distintos motivos animales. En esta parada, los reptiles y felinos muestran la diversidad de formas que los participantes llevan al recorrido.",
+        "observe": "Detente en los dientes y las escamas del reptil, y compara sus colores con el felino situado detrás.",
+        "next": "La siguiente imagen nos invita a mirar un rostro tallado bajo una figura de ave."
       }
     },
     {
@@ -107,6 +126,11 @@
           -6.3
         ],
         "yaw": -1.5707963267948966
+      },
+      "guide": {
+        "context": "Seguimos explorando el trabajo de las máscaras. Aquí, un rostro y una figura de ave comparten una misma pieza; cada parte ofrece un detalle distinto para mirar.",
+        "observe": "Busca los ojos del ave, su pico y las líneas que rodean el rostro inferior.",
+        "next": "Ahora ampliaremos la mirada para ver cómo estas piezas se integran en el movimiento del grupo."
       }
     },
     {
@@ -133,6 +157,11 @@
           -4.785
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "Las máscaras no permanecen quietas: forman parte de un baile que recorre el pueblo. Esta imagen reúne plumas, tejidos y gestos en una escena compartida.",
+        "observe": "Sigue la dirección del brazo y después recorre con la mirada las plumas de las máscaras.",
+        "next": "En la próxima parada, el conjunto de participantes ocupa el centro de nuestra atención."
       }
     },
     {
@@ -159,6 +188,11 @@
           -0.215
         ],
         "yaw": -0.0
+      },
+      "guide": {
+        "context": "El baile se sostiene entre muchas personas. Esta fotografía hace visible la presencia del grupo y la variedad de materiales con los que se viste cada participante.",
+        "observe": "Compara los tejidos y las hojas de los atuendos, sin perder de vista cómo las personas se reúnen en el encuadre.",
+        "next": "Seguimos hacia un gesto que nos devuelve a la representación del enfrentamiento."
       }
     },
     {
@@ -185,6 +219,11 @@
           0.715
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "Volvemos a la acción del recorrido. El gesto de un participante nos acerca al intercambio entre los diablitos y el toro que describe la crónica.",
+        "observe": "Mira la mano extendida, la pintura corporal y la expresión de la máscara.",
+        "next": "La siguiente parada cambia nuestro punto de atención: nos acercaremos a la música que acompaña el baile."
       }
     },
     {
@@ -211,6 +250,11 @@
           1.295
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "La música acompaña la celebración. Aquí nos detenemos ante un músico con flauta, bajo una máscara con motivos de jaguar.",
+        "observe": "Observa la posición de las manos sobre la flauta y los colores de la máscara y sus plumas.",
+        "next": "En la imagen siguiente veremos ese acompañamiento musical como una tarea compartida."
       }
     },
     {
@@ -237,6 +281,11 @@
           6.3
         ],
         "yaw": 1.5707963267948966
+      },
+      "guide": {
+        "context": "El tambor y las flautas nos devuelven al conjunto del recorrido. La música acompaña a los participantes y enlaza los distintos momentos de la celebración.",
+        "observe": "Busca el tambor en primer plano y después las flautas que aparecen a los lados.",
+        "next": "Continuamos con un encuentro cercano entre los diablitos y el toro."
       }
     },
     {
@@ -263,6 +312,11 @@
           6.645
         ],
         "yaw": -3.141592653589793
+      },
+      "guide": {
+        "context": "Después de mirar a los músicos, regresamos al toro. La estructura cubierta de gangoche representa a los conquistadores dentro del baile, frente a los diablitos que encarnan al pueblo Boruca.",
+        "observe": "Mira la textura del gangoche, la cara del toro y las manos que se acercan a él.",
+        "next": "La siguiente escena nos lleva a la Tumbazón, un momento del cierre de la representación."
       }
     },
     {
@@ -289,6 +343,11 @@
           0.0
         ],
         "yaw": -1.5707963267948966
+      },
+      "guide": {
+        "context": "En el cierre llega la Tumbazón: los diablitos caen ante el toro. Según la crónica, después se levantan y buscan al toro para conducirlo hacia el final de la ceremonia.",
+        "observe": "Observa los cuerpos junto al suelo y cómo el resto de los participantes rodea la escena.",
+        "next": "Nuestra última parada muestra el fuego con el que concluye la celebración."
       }
     },
     {
@@ -315,6 +374,11 @@
           0.0
         ],
         "yaw": 1.5707963267948966
+      },
+      "guide": {
+        "context": "Llegamos a la escena nocturna del cierre. La quema del toro termina la representación narrada en la crónica, mientras participantes y visitantes se reúnen alrededor.",
+        "observe": "Mira cómo la luz del fuego dibuja las siluetas y cambia los colores de la escena.",
+        "next": "Aquí termina el recorrido guiado. Puedes volver a las fotografías que te interesen o seguir caminando por las salas."
       }
     }
   ],

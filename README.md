@@ -59,6 +59,8 @@ Las cartelas físicas tienen texto más grande, crédito completo y selección d
 
 Los pedestales exponen una [máscara de búho en relieve](docs/MASCARA-BUHO.md), creada en Blender a partir de la referencia elegida por el usuario. El asset GLB incluye textura y soporte, y la fuente editable está incluida en el repositorio.
 
+La visita permite explorar libremente o seguir un [recorrido guiado con narración](docs/RECORRIDO-Y-NARRACION.md). Solo El diablito mayor tiene el MP3 proporcionado; se escucha por decisión del visitante, se puede caminar con la ficha abierta y no se utiliza síntesis de voz.
+
 - `src/`: aplicación y navegación.
 - `public/models/`: geometría exportada de Blender y materiales.
 - `public/data/exhibition.json`: títulos, descripciones, créditos y posiciones de enfoque.

@@ -32,3 +32,7 @@ Unbounded, Josefin Sans y Newsreader se sirven desde los paquetes @fontsource-va
 ## Máscara de exposición
 
 La referencia de la máscara de búho fue aportada por el usuario. El modelo en relieve utiliza esa fotografía como textura frontal. La procedencia y la autoría de la pieza tallada no se infieren ni se sustituyen por créditos inventados. La referencia permanece en `gallery-source/blender/owl-mask-reference.png` y el modelado reproducible en `gallery-source/blender/scripts/build_owl_mask.py`.
+
+## Narración proporcionada
+
+El MP3 para El diablito mayor fue aportado por el usuario el 14 de octubre de 2026 con nombre `ElevenLabs_2026-10-14T04_04_16_Johanna - Podcast Host, bright, warm_pvc_sp100_s50_sb75_v4.mp3`. Se incluye sin conversión como `public/audio/diablo-mayor-es.mp3`. No se generaron otras voces, no se infiere una licencia libre y los textos de guía no se presentan como transcripciones de esta grabación.
